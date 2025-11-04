@@ -1,11 +1,16 @@
 package free.core.exception
 
+import free.core.lexer.SourcePathContext
+import kotlinx.coroutines.currentCoroutineContext
+
 private class SyntaxException(
 	message: String,
+	path: String,
 	line: Int,
 	column: Int,
-) : Exception("$message at $line:$column")
+) : Exception("e: file:$path:$line:$column $message.")
 
-fun syntaxError(message: String, line: Int, column: Int): Nothing {
-	throw SyntaxException(message, line, column)
+suspend fun syntaxError(message: String, line: Int, column: Int): Nothing {
+	val path = currentCoroutineContext()[SourcePathContext]!!.path
+	throw SyntaxException(message, path, line, column)
 }

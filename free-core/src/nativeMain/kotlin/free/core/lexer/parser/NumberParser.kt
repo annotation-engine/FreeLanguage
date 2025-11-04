@@ -12,7 +12,7 @@ data object NumberParser : TokenParser {
 	
 	private val legalEndChars = " +-*/%=><!&|^~,;:)]}\n\t".toSet()
 	
-	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
 		if (!input[start].isDecimal()) return null
 		val numberSystem = if (input[start] == '0' && start + 1 < input.size) {
 			val symbol = input[start + 1]
@@ -90,7 +90,7 @@ data object NumberParser : TokenParser {
 		return Token(TokenType.NUMBER, input.concatToString(start, position), start, position, line, column)
 	}
 	
-	private fun incorrectDigitalFormat(line: Int, column: Int): Nothing {
+	private suspend fun incorrectDigitalFormat(line: Int, column: Int): Nothing {
 		syntaxError("Incorrect digital format", line, column)
 	}
 }

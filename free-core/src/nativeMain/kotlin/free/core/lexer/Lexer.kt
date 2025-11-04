@@ -1,13 +1,38 @@
 package free.core.lexer
 
 import free.core.exception.syntaxError
+import free.core.io.File
 import free.core.lexer.parser.*
 import free.core.util.TAB_LENGTH
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlin.coroutines.AbstractCoroutineContextElement
+import kotlin.coroutines.CoroutineContext
+
+suspend fun CoroutineScope.lexers(paths: List<String>): List<List<Token>> {
+	val files = paths.toSet().map { File(it) }.distinctBy { it.absolutePath }
+	val jobs = files.map { file ->
+		val path = file.absolutePath
+		async(Dispatchers.Default + SourcePathContext(path)) {
+			val input = file.readFileChars()
+			lexer(input)
+		}
+	}
+	return jobs.awaitAll()
+}
+
+class SourcePathContext(
+	val path: String
+) : AbstractCoroutineContextElement(Key) {
+	companion object Key : CoroutineContext.Key<SourcePathContext>
+}
 
 /**
  * 词法分析器
  */
-fun lexer(input: CharArray): List<Token> {
+private suspend fun lexer(input: CharArray): List<Token> {
 	val tokens = mutableListOf<Token>()
 	val lexer = Lexer(input)
 	while (true) {
@@ -40,7 +65,7 @@ private class Lexer(
 		IdentifierParser,
 	)
 	
-	fun nextToken(): Token {
+	suspend fun nextToken(): Token {
 		parsers.forEach {
 			val token = it.tryParse(input, position, line, column) ?: return@forEach
 			position = token.end

@@ -5,7 +5,7 @@ import free.core.lexer.TokenType
 
 data object EOFParser : TokenParser {
 	
-	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
 		if (start < input.size) return null
 		return Token(TokenType.EOF, "", input.size, input.size, line, column)
 	}

@@ -8,7 +8,7 @@ import free.core.util.isHex
 
 data object StringParser : TokenParser {
 	
-	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
 		if (input[start] != '"') return null
 		val sb = StringBuilder()
 		var position = start + 1

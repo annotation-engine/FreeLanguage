@@ -1,7 +1,7 @@
 package free.core
 
-import free.core.io.File
-import free.core.lexer.lexer
+import free.core.lexer.lexers
+import kotlinx.coroutines.runBlocking
 import kotlin.time.measureTime
 
 fun main(vararg args: String) {
@@ -11,25 +11,24 @@ fun main(vararg args: String) {
 			return
 		}
 		when (command) {
-			"run" -> run(args.drop(1))
+			"run" -> {
+				val paths = args.drop(1)
+				if (paths.isEmpty()) {
+					println("Error: Missing file path.\nUsage: free run <file1.free> [file2.free ...]")
+					return
+				}
+				run(args.drop(1))
+			}
+			
 			else -> help()
 		}
 	}
 	println("Execution time: $duration")
 }
 
-private fun run(paths: List<String>) {
-	if (paths.isEmpty()) {
-		println("Error: Missing file path.\nUsage: free run <file1.free> [file2.free ...]")
-		return
-	}
-	paths.forEach { path ->
-		val file = File(path)
-		val input = file.readFileChars()
-		println("lexer -> ${file.absolutePath}")
-		val tokens = lexer(input)
-		println(tokens.size)
-	}
+private fun run(paths: List<String>) = runBlocking {
+	val tokens = lexers(paths)
+	println("tokens: ${tokens.sumOf { it.size }}")
 }
 
 private fun help() {

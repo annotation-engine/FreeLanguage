@@ -66,7 +66,7 @@ data object SymbolParser : TokenParser {
 	
 	private val maxLength = tokenTypeMap.keys.maxOf { it }
 	
-	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
 		if (input[start].toString() !in tokenTypeMap[1]!!) return null
 		for (length in maxLength downTo 1) {
 			if (start + length > input.size) continue

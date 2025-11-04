@@ -5,7 +5,7 @@ import free.core.lexer.TokenType
 
 data object IdentifierParser : TokenParser {
 	
-	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
 		val char = input[start]
 		if (!char.isEnglishLetter() && char != '_') return null
 		var position = start + 1

@@ -51,7 +51,7 @@ data object KeywordParser : TokenParser {
 	
 	private val keywords = keywordTokenTypeMap.keys
 	
-	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
 		for (keyword in keywords) {
 			if (!input.startsWith(keyword, start)) {
 				continue

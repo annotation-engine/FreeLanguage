@@ -8,7 +8,7 @@ import free.core.util.isHex
 
 data object CharParser : TokenParser {
 	
-	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
 		if (input[start] != '\'') return null
 		if (start + 2 < input.size && input[start + 2] == '\'' && input[start + 1] != '\\') {
 			return Token(TokenType.CHAR, input[start + 1].toString(), start, start + 3, line, column)

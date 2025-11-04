@@ -9,9 +9,11 @@ class File(
 	private val path: String
 ) {
 	
+	private var _absolutePath: String? = null
 	val absolutePath: String
 		get() {
-			memScoped {
+			if (_absolutePath != null) return _absolutePath!!
+			return memScoped {
 				val resolved = realpath(path, null)
 				if (resolved != null) {
 					val absPath = resolved.toKString()
@@ -30,8 +32,8 @@ class File(
 					free(normalized)
 					return abs
 				}
-				return combined
-			}
+				combined
+			}.also { _absolutePath = it }
 		}
 	
 	fun readFileChars(): CharArray {
