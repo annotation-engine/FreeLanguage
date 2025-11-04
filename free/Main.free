@@ -1,0 +1,80 @@
+package com.example.free
+
+fun main() {
+	testNumbers()
+	testStrings()
+}
+
+fun testNumbers() {
+    val num1 = 10               # Int
+    val num2: Double = 10.0     # Double
+    val num3 = 10.0F            # Float
+    val num4 = 0xFFFF           # 十六进制
+    val num5: Int = 0b1010      # 二进制
+    val num6 = 0777             # 八进制
+    val num7 = 10U              # UInt
+    val num8: ULong = 20UL      # ULong
+
+    val num9 = 10 + 12
+    val num10 = 13 - 100
+    val num11: Float = 10 * 10f
+    val num12 = num11 / 2f
+    val num13 = 20 % 3
+    val num14 = 30 >> 2
+    val num15 = 30 << 1
+    val num16 = 30 >>> 4
+    val num17 = 10 & 2
+    val num18 = 10 | 2
+    val num19 = 10 ^ 2
+    var num20 = ~10
+    num20 = 10
+}
+
+fun testStrings() {
+    val str1 = "Hello"
+    val str2 = str1 + " " + "World"
+    val str3 = ['H', 'E', 'L', 'L', O]
+    val str4 = mut ['W', 'O', 'R']
+    str4 += 'D'
+    str4.add(3, 'L')
+}
+
+fun testClass() {
+    val class1 = Class(param3: 10f)
+    val class2 = Class.secondary("")    # 通过次构造函数来创建对象
+    delete class2                       # 手动释放
+}
+
+open class Class(
+    private val param1: String? = "Default",
+    var param2 = 20,    # 可根据默认值进行类型推导
+    var param3: Float
+) {
+    construct {                              # 需要使用 construct 关键字
+        println("类初始化代码段")
+    }
+
+    customName(param1: String) {        # 次构造函数，这里的名称可以自定义
+        # 进行数据初始化
+        # 次构造函数必须调用 primary 也就是主构造函数的内部形式访问
+        primary(param1, param3: 10)
+    }
+
+    fun fun1() {
+
+    }
+
+    private fun fun2(): Int {
+        100
+    }
+
+    private fun fun3(): Int? = null
+
+    clear {
+        # 当对象被手动释放或自动释放后执行
+    }
+}
+
+struct Struct {
+    val name: String
+}
