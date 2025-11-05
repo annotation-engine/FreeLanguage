@@ -1,7 +1,7 @@
 package free.core.lexer
 
-class Token(
-	val type: TokenType,
+class FreeToken(
+	val type: FreeTokenType,
 	val value: String,
 	val start: Int,
 	val end: Int,
@@ -13,11 +13,15 @@ class Token(
 		get() = this.end - this.start
 	
 	override fun toString(): String {
-		return "Token(type=$type, value=$value, line=$line, column=$column)"
+		return if (value.isNotEmpty() || type == FreeTokenType.STRING) {
+			"$type(\"$value\") $line:$column"
+		} else {
+			"$type $line:$column"
+		}
 	}
 }
 
-enum class TokenType {
+enum class FreeTokenType {
 	CLASS, SINGLE, INTERFACE, ENUM, ANNOTATION, STRUCT, SERIAL,                     // class single interface enum annotation struct serial
 	PUBLIC, PRIVATE, FILE,                                                          // public private file
 	OPEN, ABSTRACT, ONLY, FINAL, OVERRIDE, SUPER, WITH, INIT, DELETE,               // open abstract only final override super with init delete

@@ -3,6 +3,7 @@ package free.core
 import free.core.lexer.lexers
 import kotlinx.coroutines.runBlocking
 import kotlin.time.measureTime
+import kotlin.time.measureTimedValue
 
 fun main(vararg args: String) {
 	val duration = measureTime {
@@ -27,8 +28,9 @@ fun main(vararg args: String) {
 }
 
 private fun run(paths: List<String>) = runBlocking {
-	val tokens = lexers(paths)
-	println("tokens: ${tokens.sumOf { it.size }}")
+	val tokensValue = measureTimedValue { lexers(paths) }
+	val tokens = tokensValue.value
+	println("FreeLexer tokens: ${tokens.sumOf { it.size }} use ${tokensValue.duration}")
 }
 
 private fun help() {

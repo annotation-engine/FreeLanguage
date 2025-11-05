@@ -1,18 +1,18 @@
-package free.core.lexer.parser
+package free.core.lexer.recognizer
 
 import free.core.exception.syntaxError
-import free.core.lexer.Token
-import free.core.lexer.TokenType
+import free.core.lexer.FreeToken
+import free.core.lexer.FreeTokenType
 import free.core.util.isBinary
 import free.core.util.isDecimal
 import free.core.util.isHex
 import free.core.util.isOctal
 
-data object NumberParser : TokenParser {
+data object NumberRecognizer : TokenRecognizer {
 	
 	private val legalEndChars = " +-*/%=><!&|^~,;:)]}\n\t".toSet()
 	
-	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
 		if (!input[start].isDecimal()) return null
 		val numberSystem = if (input[start] == '0' && start + 1 < input.size) {
 			val symbol = input[start + 1]
@@ -87,7 +87,7 @@ data object NumberParser : TokenParser {
 				}
 			}
 		}
-		return Token(TokenType.NUMBER, input.concatToString(start, position), start, position, line, column)
+		return FreeToken(FreeTokenType.NUMBER, input.concatToString(start, position), start, position, line, column)
 	}
 	
 	private suspend fun incorrectDigitalFormat(line: Int, column: Int): Nothing {

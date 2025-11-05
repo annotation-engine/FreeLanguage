@@ -1,14 +1,14 @@
-package free.core.lexer.parser
+package free.core.lexer.recognizer
 
 import free.core.exception.syntaxError
-import free.core.lexer.Token
-import free.core.lexer.TokenType
+import free.core.lexer.FreeToken
+import free.core.lexer.FreeTokenType
 import free.core.util.EscapeType
 import free.core.util.isHex
 
-data object StringParser : TokenParser {
+data object StringRecognizer : TokenRecognizer {
 	
-	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): Token? {
+	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
 		if (input[start] != '"') return null
 		val sb = StringBuilder()
 		var position = start + 1
@@ -52,6 +52,6 @@ data object StringParser : TokenParser {
 		if (!close) {
 			syntaxError("The string is not closed", line, column)
 		}
-		return Token(TokenType.STRING, sb.toString(), start, position, line, column)
+		return FreeToken(FreeTokenType.STRING, sb.toString(), start, position, line, column)
 	}
 }
