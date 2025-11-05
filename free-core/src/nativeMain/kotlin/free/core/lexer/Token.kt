@@ -18,7 +18,7 @@ class Token(
 }
 
 enum class TokenType {
-	CLASS, SINGLE, INTERFACE, ENUM, ANNOTATION, STRUCT,                             // class single interface enum annotation struct
+	CLASS, SINGLE, INTERFACE, ENUM, ANNOTATION, STRUCT, SERIAL,                     // class single interface enum annotation struct serial
 	PUBLIC, PRIVATE, FILE,                                                          // public private file
 	OPEN, ABSTRACT, ONLY, FINAL, OVERRIDE, SUPER, WITH, INIT, DELETE,               // open abstract only final override super with init delete
 	VAR, VAL, CONST,                                                                // var val const
@@ -34,7 +34,7 @@ enum class TokenType {
 	PLUS, MINUS, STAR, SLASH, PERCENT, DOUBLE_STAR,                                 // + - * / % **
 	DOUBLE_PLUS, DOUBLE_MINUS,                                                      // ++ --
 	ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN, PERCENT_ASSIGN,   // = += -= *= /= %=
-	EQUALS, NOT_EQUALS, GT, GT_EQUALS, LT, LT_EQUALS,                               // == != > >= < <=
+	EQUALS, NOT_EQUALS, GT, GT_EQUALS, LT, LT_EQUALS, TRIPLE_EQUAL,                 // == != > >= < <= ===
 	AND, OR, NOT,                                                                   // && || !
 	BIT_AND, BIT_OR, BIT_XOR, BIT_NOT, SHL, SHR, USHR,                              // & | ^ ~ << >> >>>
 	DOT, COMMA, SEMICOLON, COLON, QUESTION, AT, COMMENT,                            // . , ; : ? @ #

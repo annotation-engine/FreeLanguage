@@ -45,6 +45,11 @@ fun testClass() {
     delete class2                       # 手动释放
 }
 
+const val NAME = getName(first: "Hello")
+
+# 常量计算函数，内部不允许依赖非常量值，可以用作提前计算等
+const fun getName(first: String): String = first + " World"
+
 open class Class(
     private val param1: String? = "Default",
     var param2 = 20,    # 可根据默认值进行类型推导
@@ -70,11 +75,52 @@ open class Class(
 
     private fun fun3(): Int? = null
 
+    val name: String
+        get = 10 + 20
+
     clear {
         # 当对象被手动释放或自动释放后执行
     }
 }
 
+# 结构体不允许空参
 struct Struct {
+    val name: String? = null,   # 支持默认参数
+    val age: Int
+    val info: Info              # 结构体中只允许使用 struct，结构体只支持参数，不支持 construct clear fun 等高级用法
+}
+
+serial struct Info {
+    val height: Int
+    val weight: Int
+}
+
+serial struct Serialized {      # 序列化结构体，功能比普通结构体多序列化功能
     val name: String
+    val age: Int
+    val info: Info              # 序列化结构体仅支持基本数据类型和序列化结构体
+}
+
+fun testStruct() {
+    val struct1 = Struct {
+        name: "Name"
+        age: 21
+    }
+    val struct2 = Struct {
+        name: "Name"
+        age: 21
+    }
+    println(struct1 == struct2)     # true 原生支持值比较
+    println(struct1 === struct2)    # false 引用比较
+
+    val serialized = Struct {
+        name: "Peter"
+        age: 18
+        info: Info {
+            height: 180
+            weight: 80
+        }
+    }
+    val json = serialized.toJson()              # serial struct 支持原生序列化函数
+    val serialized2 = Serialized.fromJson(json) # 支持反序列化
 }

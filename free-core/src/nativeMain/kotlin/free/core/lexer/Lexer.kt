@@ -14,8 +14,8 @@ import kotlin.coroutines.CoroutineContext
 suspend fun CoroutineScope.lexers(paths: List<String>): List<List<Token>> {
 	val files = paths.toSet().map { File(it) }.distinctBy { it.absolutePath }
 	val jobs = files.map { file ->
-		val path = file.absolutePath
-		async(Dispatchers.Default + SourcePathContext(path)) {
+		val sourcePath = file.absolutePath
+		async(Dispatchers.Default + FreeContext(sourcePath)) {
 			val input = file.readFileChars()
 			lexer(input)
 		}
@@ -23,10 +23,10 @@ suspend fun CoroutineScope.lexers(paths: List<String>): List<List<Token>> {
 	return jobs.awaitAll()
 }
 
-class SourcePathContext(
-	val path: String
+class FreeContext(
+	val sourcePath: String
 ) : AbstractCoroutineContextElement(Key) {
-	companion object Key : CoroutineContext.Key<SourcePathContext>
+	companion object Key : CoroutineContext.Key<FreeContext>
 }
 
 /**

@@ -8,7 +8,8 @@ data object SymbolParser : TokenParser {
 	private val tokenTypeMap = mapOf(
 		3 to mapOf(
 			">>>" to TokenType.USHR,
-			"!~>" to TokenType.NOT_IN
+			"!~>" to TokenType.NOT_IN,
+			"===" to TokenType.TRIPLE_EQUAL
 		),
 		2 to mapOf(
 			"**" to TokenType.DOUBLE_STAR,

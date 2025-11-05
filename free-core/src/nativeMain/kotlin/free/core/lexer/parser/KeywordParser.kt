@@ -13,6 +13,7 @@ data object KeywordParser : TokenParser {
 		"enum" to TokenType.ENUM,
 		"annotation" to TokenType.ANNOTATION,
 		"struct" to TokenType.STRUCT,
+		"serial" to TokenType.SERIAL,
 		"public" to TokenType.PUBLIC,
 		"private" to TokenType.PRIVATE,
 		"file" to TokenType.FILE,
