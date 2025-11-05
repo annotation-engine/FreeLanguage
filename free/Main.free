@@ -84,22 +84,22 @@ open class Class(
 }
 
 # 结构体不允许空参
-struct Struct {
+struct Struct(
     val name: String? = null,   # 支持默认参数
-    val age: Int
-    val info: Info              # 结构体中只允许使用 struct，结构体只支持参数，不支持 construct clear fun 等高级用法
-}
+    val age: Int,
+    val info: Info              # 结构体中只允许使用 struct，结构体只支持参数
+)
 
-serial struct Info {
-    val height: Int
+serial struct Info(
+    val height: Int,
     val weight: Int
-}
+)
 
-serial struct Serialized {      # 序列化结构体，功能比普通结构体多序列化功能
-    val name: String
-    val age: Int
+serial struct Serialized(       # 序列化结构体，功能比普通结构体多序列化功能
+    val name: String,
+    val age: Int,
     val info: Info              # 序列化结构体仅支持基本数据类型和序列化结构体
-}
+)
 
 fun testStruct() {
     val struct1 = Struct(

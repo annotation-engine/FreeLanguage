@@ -1,5 +1,7 @@
 package free.core.lexer
 
+import kotlinx.coroutines.currentCoroutineContext
+
 class FreeToken(
 	val type: FreeTokenType,
 	val value: String,
@@ -11,12 +13,24 @@ class FreeToken(
 	
 	val length: Int
 		get() = this.end - this.start
-	
-	override fun toString(): String {
-		return if (value.isNotEmpty() || type == FreeTokenType.STRING) {
-			"$type(\"$value\") $line:$column"
-		} else {
-			"$type $line:$column"
+}
+
+suspend fun List<FreeToken>.formatToString(): String {
+	val sourcePath = currentCoroutineContext()[FreeContext]!!.sourcePath
+	val lineColumns = this.map { "$sourcePath:${it.line}:${it.column}" }
+	val max = lineColumns.maxOf { it.length }
+	val tokens = this
+	return buildString {
+		tokens.forEachIndexed { index, token ->
+			val lineColumn = lineColumns[index]
+			append(lineColumn)
+			append(" ".repeat(max - lineColumn.length + 2))
+			if (token.type == FreeTokenType.STRING || token.value.isNotEmpty()) {
+				append("${token.type}(\"${token.value}\")")
+			} else {
+				append(token.type)
+			}
+			append("\n")
 		}
 	}
 }

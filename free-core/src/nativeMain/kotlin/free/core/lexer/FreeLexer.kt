@@ -11,13 +11,15 @@ import kotlinx.coroutines.awaitAll
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
-suspend fun CoroutineScope.lexers(paths: List<String>): List<List<FreeToken>> {
+suspend fun CoroutineScope.lexerToTokens(paths: List<String>): List<List<FreeToken>> {
 	val files = paths.toSet().map { File(it) }.distinctBy { it.absolutePath }
 	val jobs = files.map { file ->
 		val sourcePath = file.absolutePath
 		async(Dispatchers.Default + FreeContext(sourcePath)) {
 			val input = file.readFileChars()
-			FreeLexer(input).lexer()
+			FreeLexer(input).lexer().also {
+				println(it.formatToString())
+			}
 		}
 	}
 	return jobs.awaitAll()
@@ -55,7 +57,6 @@ private class FreeLexer(
 		return buildList {
 			while (true) {
 				val token = nextToken()
-				println(token)
 				this += token
 				if (token.type == FreeTokenType.EOF) break
 			}
