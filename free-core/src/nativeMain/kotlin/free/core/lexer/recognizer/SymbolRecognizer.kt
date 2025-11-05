@@ -35,6 +35,7 @@ data object SymbolRecognizer : TokenRecognizer {
 			"?=" to FreeTokenType.QUESTION_ASSIGN,
 			"?." to FreeTokenType.QUESTION_DOT,
 			"!!" to FreeTokenType.NOT_NULL_ASSERT,
+			"::" to FreeTokenType.DOUBLE_COLON
 		),
 		1 to mapOf(
 			"+" to FreeTokenType.PLUS,

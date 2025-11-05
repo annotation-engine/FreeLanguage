@@ -41,7 +41,7 @@ enum class FreeTokenType {
 	EQUALS, NOT_EQUALS, GT, GT_EQUALS, LT, LT_EQUALS, TRIPLE_EQUAL,                 // == != > >= < <= ===
 	AND, OR, NOT,                                                                   // && || !
 	BIT_AND, BIT_OR, BIT_XOR, BIT_NOT, SHL, SHR, USHR,                              // & | ^ ~ << >> >>>
-	DOT, COMMA, SEMICOLON, COLON, QUESTION, AT, COMMENT,                            // . , ; : ? @ #
+	DOT, COMMA, SEMICOLON, COLON, DOUBLE_COLON, QUESTION, AT, COMMENT,              // . , ; : :: ? @ #
 	IN, NOT_IN,                                                                     // ~> !～>
 	ELVIS, ARROW, DOUBLE_DOT, QUESTION_ASSIGN, QUESTION_DOT, NOT_NULL_ASSERT,       // ?: -> .. ?= ?. !!
 	LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE,                             // ( ) [ ] { }

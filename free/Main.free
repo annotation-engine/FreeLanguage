@@ -102,25 +102,57 @@ serial struct Serialized {      # 序列化结构体，功能比普通结构体�
 }
 
 fun testStruct() {
-    val struct1 = Struct {
-        name: "Name"
+    val struct1 = Struct(
+        name: "Name",
         age: 21
-    }
-    val struct2 = Struct {
-        name: "Name"
+    )
+    val struct2 = Struct(
+        name: "Name",
         age: 21
-    }
+    )
     println(struct1 == struct2)     # true 原生支持值比较
     println(struct1 === struct2)    # false 引用比较
 
-    val serialized = Struct {
-        name: "Peter"
-        age: 18
-        info: Info {
+    val serialized = Struct(
+        name: "Peter",
+        age: 18,
+        info: Info(
             height: 180
             weight: 80
-        }
+        )
+    )
+    val json: String = serialized.toJson()          # serial struct 支持原生序列化函数
+    val serialized2 = Serialized.fromJson(json)     # 支持反序列化
+}
+
+fun test() {
+    val fun1 = ::fun2       # 可获取函数应用
+    fun1()                  # 可执行
+
+    val fun2 = Preference::test # 获取对象内部的函数
+    val preference = Preference()
+    fun2(this: preference, name: "Hello")       # 如果是对象内部的函数应用，需要传递 this 参数，为参数第一个，this: 可以省略
+}
+
+fun callback(callback: () -> Unit) {
+    val (age, name) = multiReturnParameters()
+}
+
+fun multiReturnParameters(): (Int, String) {    # 多返回值语法
+    return (1, "Hello")
+}
+
+fun singleReturnParameter(): Int {
+    1
+}
+
+class Preference {
+
+    fun test(var name: String) {
+
     }
-    val json = serialized.toJson()              # serial struct 支持原生序列化函数
-    val serialized2 = Serialized.fromJson(json) # 支持反序列化
+}
+
+fun fun2() {
+
 }
