@@ -18,16 +18,16 @@ data object CharRecognizer : TokenRecognizer {
 			if (escape in EscapeType.standardEscapes) {
 				return FreeToken(FreeTokenType.CHAR, escape, start, start + 4, line, column)
 			} else {
-				syntaxError("Illegal escape character: '$escape'", line, column)
+				syntaxError("非法转义字符: '$escape'", line, column)
 			}
 		}
 		if (start + 7 < input.size && input[start + 7] == '\'' && input.concatToString(start + 1, start + 3) == EscapeType.UNICODE.escape) {
 			val unicode = input.concatToString(start + 3, start + 7)
 			if (!unicode.isHex()) {
-				syntaxError("Illegal escape character: '\\u$unicode'", line, column)
+				syntaxError("非法转义字符: '\\u$unicode'", line, column)
 			}
 			return FreeToken(FreeTokenType.CHAR, "\\u$unicode", start, start + 8, line, column)
 		}
-		syntaxError("Syntax error", line, column)
+		syntaxError("字符语法错误", line, column)
 	}
 }

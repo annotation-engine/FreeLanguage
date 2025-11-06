@@ -1,9 +1,18 @@
 package free.core
 
-import free.core.lexer.lexerToTokens
+import free.core.io.File
+import free.core.lexer.FreeLexer
+import free.core.lexer.formatToString
+import free.core.parser.FreeParser
+import free.core.parser.node.Program
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import kotlin.coroutines.AbstractCoroutineContextElement
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.measureTime
-import kotlin.time.measureTimedValue
 
 fun main(vararg args: String) {
 	val duration = measureTime {
@@ -28,9 +37,24 @@ fun main(vararg args: String) {
 }
 
 private fun run(paths: List<String>) = runBlocking {
-	val tokensValue = measureTimedValue { lexerToTokens(paths) }
-	val tokens = tokensValue.value
-	println("FreeLexer tokens: ${tokens.sumOf { it.size }} use ${tokensValue.duration}")
+	val files = paths.toSet().map(::File).distinctBy { it.absolutePath }
+	val jobs = files.map { file ->
+		val sourcePath = file.absolutePath
+		val freeContext = FreeContext(sourcePath)
+		async(Dispatchers.Default + freeContext) {
+			val input = file.readFileChars()
+			val tokens = FreeLexer(input).lex()
+			println(tokens.formatToString())
+			FreeParser(tokens).parse()
+		}
+	}
+	val sourceFileNodes = jobs.awaitAll()
+	val program = Program(sourceFileNodes)
+	val json = Json {
+		prettyPrint = true
+		encodeDefaults = true
+	}
+	println(json.encodeToString(program))
 }
 
 private fun help() {
@@ -40,4 +64,10 @@ private fun help() {
             free help                                Show command usage and options.
 	""".trimIndent()
 	println(help)
+}
+
+class FreeContext(
+	val sourcePath: String
+) : AbstractCoroutineContextElement(Key) {
+	companion object Key : CoroutineContext.Key<FreeContext>
 }

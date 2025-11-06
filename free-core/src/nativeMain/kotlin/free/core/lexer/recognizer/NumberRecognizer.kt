@@ -91,7 +91,7 @@ data object NumberRecognizer : TokenRecognizer {
 	}
 	
 	private suspend fun incorrectDigitalFormat(line: Int, column: Int): Nothing {
-		syntaxError("Incorrect digital format", line, column)
+		syntaxError("数字格式错误", line, column)
 	}
 }
 

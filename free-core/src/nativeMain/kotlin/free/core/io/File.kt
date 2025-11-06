@@ -37,7 +37,7 @@ class File(
 		}
 	
 	fun readFileChars(): CharArray {
-		val file = fopen(path, "rb") ?: error("Cannot open file: $path")
+		val file = fopen(path, "rb") ?: error("无法打开文件: $path")
 		try {
 			val buffers = StringBuilder()
 			memScoped {
@@ -55,28 +55,6 @@ class File(
 		}
 	}
 }
-
-// fun readFileChars(path: String): CharArray {
-//    val file = fopen(path, "rb") ?: error("Cannot open file: $path")
-//
-//    try {
-//        val builder = StringBuilder()
-//        memScoped {
-//            val buf = allocArray<ByteVar>(4096)
-//            while (true) {
-//                val bytesRead = fread(buf, 1u, 4096u, file)
-//                if (bytesRead == 0UL) break
-//
-//                // 把读取的部分手动转换为字符串（确保不会读出垃圾）
-//                val chunk = buf.readBytes(bytesRead.toInt()).decodeToString()
-//                builder.append(chunk)
-//            }
-//        }
-//        return builder.toString().toCharArray()
-//    } finally {
-//        fclose(file)
-//    }
-//}
 
 fun currentWorkingDirectory(): String {
 	val cwdPtr = getcwd(null, 0u)

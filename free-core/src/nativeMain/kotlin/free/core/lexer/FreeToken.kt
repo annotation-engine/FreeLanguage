@@ -1,5 +1,6 @@
 package free.core.lexer
 
+import free.core.FreeContext
 import kotlinx.coroutines.currentCoroutineContext
 
 class FreeToken(
@@ -37,7 +38,7 @@ suspend fun List<FreeToken>.formatToString(): String {
 
 enum class FreeTokenType {
 	CLASS, SINGLE, INTERFACE, ENUM, ANNOTATION, STRUCT, SERIAL,                     // class single interface enum annotation struct serial
-	PUBLIC, PRIVATE, FILE,                                                          // public private file
+	PUBLIC, MODULE, LOCAL, FILE, PRIVATE,                                           // public module local file private
 	OPEN, ABSTRACT, ONLY, FINAL, OVERRIDE, SUPER, WITH, INIT, DELETE,               // open abstract only final override super with init delete
 	VAR, VAL, CONST,                                                                // var val const
 	FUN,                                                                            // fun
