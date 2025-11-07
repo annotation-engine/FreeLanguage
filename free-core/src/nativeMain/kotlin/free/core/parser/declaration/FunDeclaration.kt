@@ -1,6 +1,6 @@
 package free.core.parser.declaration
 
-import free.core.constrants.FreeTypes
+import free.core.constants.FreeTypes
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import free.core.parser.Modifier
@@ -32,7 +32,7 @@ class FunDeclarationParser(
 		while (!ctx.match(FreeTokenType.RPAREN)) {
 			parameters += FunParameterParser(ctx).parse()
 			if (!ctx.check(FreeTokenType.RPAREN)) {
-				ctx.expect(FreeTokenType.COMMA, "函数 $funName 的参数缺少 ',")
+				ctx.expect(FreeTokenType.COMMA, "函数 $funName 的参数缺少 ','")
 			}
 		}
 		
@@ -45,7 +45,7 @@ class FunDeclarationParser(
 			returnTypes += TypeReference(FreeTypes.Unit)
 		}
 		
-		ctx.expect(FreeTokenType.LBRACE, "函数 $funName 函数 '{'")
+		ctx.expect(FreeTokenType.LBRACE, "函数 $funName 缺少 '{'")
 		
 		while (!ctx.match(FreeTokenType.RBRACE)) {
 			ctx.advance()

@@ -48,11 +48,12 @@ private fun run(paths: List<String>) = runBlocking {
 	}
 	val sourceFileNodes = jobs.awaitAll()
 	val program = Program(sourceFileNodes)
-	val json = Json {
-		prettyPrint = true
-		encodeDefaults = true
-	}
 	println(json.encodeToString(program))
+}
+
+val json = Json {
+	prettyPrint = true
+	encodeDefaults = true
 }
 
 private fun help() {

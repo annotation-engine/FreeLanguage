@@ -2,7 +2,7 @@ package free.core.lexer
 
 enum class FreeTokenType {
 	CLASS, SINGLE, INTERFACE, ENUM, ANNOTATION, STRUCT, SERIAL,                     // class single interface enum annotation struct serial
-	PUBLIC, MODULE, INTERNAL, FILE, PRIVATE,                                        // public module internal file private
+	PRIVATE, FILE, INTERNAL, MODULE, PUBLIC,                                        // public module internal file private
 	OPEN, ABSTRACT, ONLY, FINAL, OVERRIDE, SUPER, WITH, INIT, DELETE,               // open abstract only final override super with init delete
 	VAR, VAL, CONST,                                                                // var val const
 	FUN,                                                                            // fun

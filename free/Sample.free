@@ -10,7 +10,7 @@ private fun add(num1: Int, num2: Int?): Int {
     return num1 + num2
 }
 
-private fun callback(callback: (_: Int) -> [String, Int]) {
+private fun callback(callback: ((_: Int) -> [String, Int])?) {
 
 }
 
@@ -31,7 +31,21 @@ private fun returns3(): ((String)) {
 
 }
 
-class Hello {
+fun lambda1(param1: (() -> Unit) -> Unit, param2: () -> (_: Int) -> [String, () -> Unit[]?]) {
+
+}
+
+fun lambda2(callback: () -> [String, Int]) {
+
+}
+
+class Hello module(
+    private val param1: String?,
+    private var param2: Int[],
+    val param3: () -> Int[],
+    var param4: () -> Int,
+    param5: (((Int)?)?)
+) {
 
     file fun test(): Int, String?, free.example.Hello {
         return 1, "Hello"

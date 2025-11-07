@@ -2,14 +2,17 @@ package free.core.parser.declaration
 
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
-import free.core.parser.FreeParserContext
-import free.core.parser.Modifier
+import free.core.parser.*
+import free.core.parser.node.ClassParameterParser
+import free.core.parser.node.Parameter
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ClassDeclaration(
 	val name: String,
-	val modifiers: List<Modifier>,
+	val modifiers: Set<Modifier>,
+	val constructorModifiers: Set<Modifier>,
+	val parameters: List<Parameter>,
 	val members: List<Declaration>
 ) : Declaration
 
@@ -18,22 +21,32 @@ class ClassDeclarationParser(
 ) {
 	
 	suspend fun parse(vararg modifiers: Modifier): ClassDeclaration {
-		val members = mutableListOf<Declaration>()
 		ctx.expect(FreeTokenType.IDENTIFIER, "类缺少名称")
-		val className = ctx.previous.value
-		ctx.expect(FreeTokenType.LBRACE, "类 $className 缺少 '{'")
-		val accessModifier = when {
-			Modifier.PRIVATE in modifiers -> Modifier.PRIVATE
-			Modifier.FILE in modifiers -> Modifier.FILE
-			else -> Modifier.PUBLIC
+		val name = ctx.previous.value
+		val classAccess = getClassAccess(modifiers)
+		val constructorModifiers = getConstructorModifiers(classAccess)
+		val parameters = mutableListOf<Parameter>()
+		if (ctx.match(FreeTokenType.LPAREN)) {
+			while (!ctx.match(FreeTokenType.RPAREN)) {
+				parameters += ClassParameterParser(ctx).parse(classAccess)
+				if (!ctx.check(FreeTokenType.RPAREN)) {
+					ctx.match(FreeTokenType.COMMA)
+				}
+			}
 		}
+		
+		ctx.expect(FreeTokenType.LBRACE, "类 $name 缺少 '{'")
+		
+		val members = mutableListOf<Declaration>()
 		while (!ctx.match(FreeTokenType.RBRACE)) {
-			members += parseDeclaration(accessModifier)
+			members += parseDeclaration(classAccess)
 		}
 		
 		return ClassDeclaration(
-			name = className,
-			modifiers = modifiers.toList(),
+			name = name,
+			modifiers = modifiers.toSet(),
+			constructorModifiers = constructorModifiers,
+			parameters = parameters,
 			members = members
 		)
 	}
@@ -43,7 +56,7 @@ class ClassDeclarationParser(
 	): Declaration = when {
 		ctx.match(FreeTokenType.PRIVATE) -> parseDeclaration(classAccess, Modifier.PRIVATE)
 		ctx.match(FreeTokenType.FILE) -> parseDeclaration(classAccess, Modifier.FILE)
-		ctx.match(FreeTokenType.INTERNAL) -> parseDeclaration(classAccess, Modifier.LOCAL)
+		ctx.match(FreeTokenType.INTERNAL) -> parseDeclaration(classAccess, Modifier.INTERNAL)
 		ctx.match(FreeTokenType.MODULE) -> parseDeclaration(classAccess, Modifier.MODULE)
 		ctx.match(FreeTokenType.PUBLIC) -> parseDeclaration(classAccess, Modifier.PUBLIC)
 		else -> parseDeclaration(classAccess, null)
@@ -51,9 +64,9 @@ class ClassDeclarationParser(
 	
 	private suspend fun parseDeclaration(classAccess: Modifier, memberAccess: Modifier?): Declaration {
 		if (memberAccess != null) {
-			checkMemberAccess(classAccess, memberAccess)
+			checkMemberAccess(classAccess, memberAccess, ctx.previous)
 		}
-		val memberAccess = memberAccess ?: getDefaultMemberAccess(classAccess)
+		val memberAccess = memberAccess ?: getDefaultMemberAccess(classAccess, ctx.previous)
 		return when {
 			ctx.match(FreeTokenType.FUN) -> FunDeclarationParser(ctx).parse(memberAccess)
 			ctx.match(FreeTokenType.CLASS) -> ClassDeclarationParser(ctx).parse(memberAccess)
@@ -61,22 +74,29 @@ class ClassDeclarationParser(
 		}
 	}
 	
-	private suspend fun getDefaultMemberAccess(classAccess: Modifier): Modifier {
-		return when (classAccess) {
-			Modifier.PRIVATE, Modifier.FILE -> Modifier.FILE
-			Modifier.LOCAL -> Modifier.LOCAL
-			Modifier.MODULE -> Modifier.MODULE
-			Modifier.PUBLIC -> Modifier.PUBLIC
-			else -> syntaxError("不支持的访问修饰符", ctx.current)
+	private fun getClassAccess(modifiers: Array<out Modifier>): Modifier {
+		Modifiers.accessModifiers.forEach {
+			if (it in modifiers) return it
+		}
+		return Modifier.PUBLIC
+	}
+	
+	private suspend fun getConstructorModifiers(classAccess: Modifier): Set<Modifier> {
+		return when {
+			ctx.match(FreeTokenType.PRIVATE) -> getConstructorModifiers(classAccess, Modifier.PRIVATE)
+			ctx.match(FreeTokenType.FILE) -> getConstructorModifiers(classAccess, Modifier.FILE)
+			ctx.match(FreeTokenType.INTERNAL) -> getConstructorModifiers(classAccess, Modifier.INTERNAL)
+			ctx.match(FreeTokenType.MODULE) -> getConstructorModifiers(classAccess, Modifier.MODULE)
+			ctx.match(FreeTokenType.PUBLIC) -> getConstructorModifiers(classAccess, Modifier.PUBLIC)
+			else -> getConstructorModifiers(classAccess, null)
 		}
 	}
 	
-	private suspend fun checkMemberAccess(
-		classAccess: Modifier,
-		memberAccess: Modifier
-	) {
-		if (memberAccess > classAccess) {
-			syntaxError("函数访问级别不得大于所属类", ctx.current)
+	private suspend fun getConstructorModifiers(classAccess: Modifier, constructorAccess: Modifier?): Set<Modifier> {
+		if (constructorAccess != null) {
+			checkMemberAccess(classAccess, constructorAccess, ctx.previous, isConstructor = true)
+			return setOf(constructorAccess)
 		}
+		return setOf(getDefaultMemberAccess(classAccess, ctx.previous))
 	}
 }

@@ -1,4 +1,4 @@
-package free.core.constrants
+package free.core.constants
 
 import free.core.parser.node.NamedType
 
