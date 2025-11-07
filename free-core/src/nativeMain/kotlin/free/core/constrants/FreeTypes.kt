@@ -1,6 +1,8 @@
 package free.core.constrants
 
+import free.core.parser.node.CommonType
+
 object FreeTypes {
 	
-	const val UNIT = "free.Unit"
+	val Unit = CommonType("free.Unit")
 }

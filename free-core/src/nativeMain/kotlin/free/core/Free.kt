@@ -44,7 +44,7 @@ private fun run(paths: List<String>) = runBlocking {
 		async(Dispatchers.Default + freeContext) {
 			val input = file.readFileChars()
 			val tokens = FreeLexer(input).lex()
-			println(tokens.formatToString())
+//			println(tokens.formatToString())
 			FreeParser(tokens).parse()
 		}
 	}

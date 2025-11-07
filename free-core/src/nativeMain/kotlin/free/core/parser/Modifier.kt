@@ -5,6 +5,3 @@ enum class Modifier {
 	
 	VAR, VAL
 }
-
-val Modifier.isAccess: Boolean
-	get() = this in Modifier.PRIVATE..Modifier.PUBLIC

@@ -10,10 +10,26 @@ private fun add(num1: Int, num2: Int?): Int {
     return num1 + num2
 }
 
+private fun callback() {
+
+}
+
+private fun callback2(): Int, String {
+
+}
+
+private fun returns1(): ((fun1: () -> String[]) -> Unit)? {
+    return
+}
+
+private fun returns2(): (String, age: Int, _: String) -> [Int?, String[]?]? {
+    return
+}
+
 class Hello {
 
-    file fun test(): (Int, String?, free.example.Hello) {
-        return (1, "Hello")
+    file fun test(): Int, String?, free.example.Hello {
+        return 1, "Hello"
     }
 
     fun test2(): Double? {

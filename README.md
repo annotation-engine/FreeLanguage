@@ -15,3 +15,40 @@
    ↓
 可执行 / 解释运行
 ```
+
+```text
+AstNode
+├── Program
+│    └── SourceFileNode
+│         ├── PackageDeclaration
+│         └── Declaration*
+│              ├── FunctionDeclaration
+│              │    └── List<Statement>
+│              ├── ConstantDeclaration
+│              ├── ConstantFunctionDeclaration
+│              ├── ClassDeclaration
+│              │    ├── ConstructorDeclaration
+│              │    └── List<Declaration>
+│              ├── StructDeclaration
+│              └── PropertyDeclaration
+│
+├── Statement
+│    ├── VariableDeclaration
+│    ├── AssignmentStatement
+│    ├── ExpressionStatement
+│    └── ReturnStatement
+│
+└── Expression
+     ├── LiteralExpression
+     ├── BinaryExpression
+     ├── UnaryExpression
+     ├── FunctionCallExpression
+     ├── LambdaExpression
+     ├── FunctionReferenceExpression
+     ├── MemberReferenceExpression
+     ├── ArrayExpression
+     ├── StructInitializationExpression
+     ├── ObjectCreationExpression
+     ├── PropertyAccessExpression
+     └── NamedArgumentExpression
+```
