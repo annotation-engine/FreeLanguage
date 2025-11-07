@@ -12,6 +12,20 @@ data class TypeReference(
 	val isArray: Boolean = false
 )
 
+@Serializable
+sealed interface Type
+
+@Serializable
+data class NamedType(
+	val value: String
+) : Type
+
+@Serializable
+data class LambdaType(
+	val parameters: List<Parameter>,
+	val returnTypes: List<TypeReference>
+) : Type
+
 class TypeReferenceParser(
 	private val ctx: FreeParserContext
 ) {
@@ -29,7 +43,16 @@ class TypeReferenceParser(
 					ctx.expect(FreeTokenType.COMMA, "函数参数列表缺少 ','")
 				}
 			}
-			// name: () -> [Int, String]
+			if (parameters.size == 1 && !ctx.check(FreeTokenType.ARROW)) {
+				val parameter = parameters.single()
+				if (parameter.name != "") {
+					syntaxError("语法错误", ctx.peek(offset = -4)!!)
+				}
+				repeat(lparenCount) {
+					ctx.expect(FreeTokenType.RPAREN, "函数参数缺少 ')'")
+				}
+				return parameter.typeReference
+			}
 			ctx.expect(FreeTokenType.ARROW, "函数参数缺少 '->'")
 			val returnTypes = mutableListOf<TypeReference>()
 			if (ctx.match(FreeTokenType.LBRACKET)) {
@@ -53,6 +76,14 @@ class TypeReferenceParser(
 				ctx.expect(FreeTokenType.RBRACKET, "数组类型缺少 ']'")
 			}
 			val isNullable = ctx.match(FreeTokenType.QUESTION)
+			if (isNullable) {
+				when {
+					ctx.peek(offset = -2)?.type == FreeTokenType.IDENTIFIER -> {}
+					ctx.peek(offset = -3)?.type == FreeTokenType.LBRACKET && ctx.peek(offset = 2)?.type == FreeTokenType.RBRACKET -> {}
+					ctx.peek(offset = -2)?.type == FreeTokenType.RPAREN -> {}
+					else -> syntaxError("语法错误", ctx.previous)
+				}
+			}
 			return TypeReference(
 				type = LambdaType(
 					parameters = parameters,
@@ -61,6 +92,8 @@ class TypeReferenceParser(
 				isNullable = isNullable,
 				isArray = isArray
 			)
+		} else {
+		
 		}
 		
 		// 普通类型
@@ -77,23 +110,9 @@ class TypeReferenceParser(
 		}
 		val isNullable = ctx.match(FreeTokenType.QUESTION)
 		return TypeReference(
-			type = CommonType(type.joinToString(".")),
+			type = NamedType(type.joinToString(".")),
 			isNullable = isNullable,
 			isArray = isArray
 		)
 	}
 }
-
-@Serializable
-sealed interface Type
-
-@Serializable
-data class CommonType(
-	val value: String
-) : Type
-
-@Serializable
-data class LambdaType(
-	val parameters: List<Parameter>,
-	val returnTypes: List<TypeReference>
-) : Type

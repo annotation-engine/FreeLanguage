@@ -43,7 +43,7 @@ class ClassDeclarationParser(
 	): Declaration = when {
 		ctx.match(FreeTokenType.PRIVATE) -> parseDeclaration(classAccess, Modifier.PRIVATE)
 		ctx.match(FreeTokenType.FILE) -> parseDeclaration(classAccess, Modifier.FILE)
-		ctx.match(FreeTokenType.LOCAL) -> parseDeclaration(classAccess, Modifier.LOCAL)
+		ctx.match(FreeTokenType.INTERNAL) -> parseDeclaration(classAccess, Modifier.LOCAL)
 		ctx.match(FreeTokenType.MODULE) -> parseDeclaration(classAccess, Modifier.MODULE)
 		ctx.match(FreeTokenType.PUBLIC) -> parseDeclaration(classAccess, Modifier.PUBLIC)
 		else -> parseDeclaration(classAccess, null)

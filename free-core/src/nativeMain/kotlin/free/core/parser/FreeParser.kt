@@ -12,10 +12,10 @@ import free.core.parser.node.SourceFileNode
 import kotlinx.coroutines.currentCoroutineContext
 
 class FreeParser(
-	tokens: List<FreeToken>
+	rawTokens: List<FreeToken>
 ) {
 	
-	private val ctx = FreeParserContext(tokens)
+	private val ctx = FreeParserContext(rawTokens)
 	
 	suspend fun parse(): SourceFileNode {
 		val sourcePath = currentCoroutineContext()[FreeContext]!!.sourcePath
@@ -34,7 +34,7 @@ class FreeParser(
 	private suspend fun parseDeclaration(): Declaration = when {
 		ctx.match(FreeTokenType.PRIVATE) -> parseDeclaration(Modifier.PRIVATE)
 		ctx.match(FreeTokenType.FILE) -> syntaxError("顶层函数不支持 file 访问修饰符", ctx.previous)
-		ctx.match(FreeTokenType.LOCAL) -> parseDeclaration(Modifier.LOCAL)
+		ctx.match(FreeTokenType.INTERNAL) -> parseDeclaration(Modifier.LOCAL)
 		ctx.match(FreeTokenType.MODULE) -> parseDeclaration(Modifier.MODULE)
 		ctx.match(FreeTokenType.PUBLIC) -> parseDeclaration(Modifier.PUBLIC)
 		else -> parseDeclaration(Modifier.PUBLIC)

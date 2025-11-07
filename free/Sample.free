@@ -22,8 +22,13 @@ private fun returns1(): ((fun1: () -> String[]) -> Unit)? {
     return
 }
 
-private fun returns2(): (String, age: Int, _: String) -> [Int?, String[]?]? {
+private fun returns2(): (String, age: Int, _: String) -> [Int?, String[]?], String {
     return
+}
+
+# ((String)) 与 String 等价
+private fun returns3(): ((String)) {
+
 }
 
 class Hello {

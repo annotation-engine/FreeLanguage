@@ -16,7 +16,7 @@ data object KeywordRecognizer : TokenRecognizer {
 		"serial" to FreeTokenType.SERIAL,
 		"public" to FreeTokenType.PUBLIC,
 		"module" to FreeTokenType.MODULE,
-		"local" to FreeTokenType.LOCAL,
+		"internal" to FreeTokenType.INTERNAL,
 		"file" to FreeTokenType.FILE,
 		"private" to FreeTokenType.PRIVATE,
 		"open" to FreeTokenType.OPEN,

@@ -1,8 +1,8 @@
 package free.core.constrants
 
-import free.core.parser.node.CommonType
+import free.core.parser.node.NamedType
 
 object FreeTypes {
 	
-	val Unit = CommonType("free.Unit")
+	val Unit = NamedType("free.Unit")
 }

@@ -3,10 +3,13 @@ package free.core.parser
 import free.core.exception.syntaxError
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
+import free.core.lexer.removeComments
 
 class FreeParserContext(
-	private val tokens: List<FreeToken>
+	rawTokens: List<FreeToken>
 ) {
+	
+	private val tokens = rawTokens.removeComments()
 	
 	private var position = 0
 	
