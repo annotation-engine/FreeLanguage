@@ -12,15 +12,15 @@ data class Parameter(
 	val typeReference: TypeReference,
 )
 
-class ParameterParser(
+class LambdaParameterParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parseWhenLambda(): Parameter {
+	suspend fun parse(): Parameter {
 		val name = if (ctx.peek(offset = 1)?.type == FreeTokenType.COLON) {
 			ctx.expect(FreeTokenType.IDENTIFIER, "参数缺少名称")
 			ctx.previous.value.also {
-				ctx.expect(FreeTokenType.COLON, "函数缺少 ':'")
+				ctx.expect(FreeTokenType.COLON, "参数缺少 ':'")
 			}
 		} else ""
 		val typeReference = TypeReferenceParser(ctx).parse()
@@ -28,6 +28,29 @@ class ParameterParser(
 			name = name,
 			modifiers = emptyList(),
 			typeReference = typeReference,
+		)
+	}
+}
+
+class FunParameterParser(
+	private val ctx: FreeParserContext
+) {
+	
+	suspend fun parse(): Parameter {
+		val modifiers = listOf(
+			when {
+				ctx.match(FreeTokenType.VAR) -> Modifier.VAR
+				else -> Modifier.VAL
+			}
+		)
+		ctx.expect(FreeTokenType.IDENTIFIER, "参数缺少名称")
+		val name = ctx.previous.value
+		ctx.expect(FreeTokenType.COLON, "参数缺少 ':'")
+		val typeReference = TypeReferenceParser(ctx).parse()
+		return Parameter(
+			name = name,
+			modifiers = modifiers,
+			typeReference = typeReference
 		)
 	}
 }

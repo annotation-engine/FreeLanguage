@@ -1,5 +1,6 @@
 package free.core.lexer.recognizer
 
+import free.core.exception.syntaxError
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
 
@@ -12,7 +13,16 @@ data object IdentifierRecognizer : TokenRecognizer {
 		while (position < input.size && (input[position] == '_' || input[position].isEnglishLetter() || input[position].isDigit())) {
 			position++
 		}
-		return FreeToken(FreeTokenType.IDENTIFIER, input.concatToString(start, position), start, position, line, column)
+		val identifier = input.concatToString(start, position)
+		var isValid = identifier == "_"
+		for (c in identifier) {
+			if (isValid) break
+			isValid = c != '_'
+		}
+		if (!isValid) {
+			syntaxError("不合法的标识符", line, column)
+		}
+		return FreeToken(FreeTokenType.IDENTIFIER, identifier, start, position, line, column)
 	}
 	
 	private fun Char.isEnglishLetter(): Boolean {

@@ -38,7 +38,7 @@ class TypeReferenceParser(
 			}
 			val parameters = mutableListOf<Parameter>()
 			while (!ctx.match(FreeTokenType.RPAREN)) {
-				parameters += ParameterParser(ctx).parseWhenLambda()
+				parameters += LambdaParameterParser(ctx).parse()
 				if (!ctx.check(FreeTokenType.RPAREN)) {
 					ctx.expect(FreeTokenType.COMMA, "函数参数列表缺少 ','")
 				}

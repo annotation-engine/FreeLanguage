@@ -4,6 +4,7 @@ import free.core.constrants.FreeTypes
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import free.core.parser.Modifier
+import free.core.parser.node.FunParameterParser
 import free.core.parser.node.Parameter
 import free.core.parser.node.TypeReference
 import free.core.parser.node.TypeReferenceParser
@@ -29,7 +30,10 @@ class FunDeclarationParser(
 		
 		val parameters = mutableListOf<Parameter>()
 		while (!ctx.match(FreeTokenType.RPAREN)) {
-			ctx.advance()
+			parameters += FunParameterParser(ctx).parse()
+			if (!ctx.check(FreeTokenType.RPAREN)) {
+				ctx.expect(FreeTokenType.COMMA, "函数 $funName 的参数缺少 ',")
+			}
 		}
 		
 		val returnTypes = mutableListOf<TypeReference>()
