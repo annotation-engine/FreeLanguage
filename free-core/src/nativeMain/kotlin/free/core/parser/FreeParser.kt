@@ -4,9 +4,7 @@ import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
-import free.core.parser.declaration.ClassDeclarationParser
 import free.core.parser.declaration.Declaration
-import free.core.parser.declaration.FunDeclarationParser
 import free.core.parser.declaration.PackageDeclarationParser
 import free.core.parser.node.SourceFileNode
 import kotlinx.coroutines.currentCoroutineContext
@@ -31,18 +29,29 @@ class FreeParser(
 		)
 	}
 	
-	private suspend fun parseDeclaration(): Declaration = when {
-		ctx.match(FreeTokenType.PRIVATE) -> parseDeclaration(Modifier.PRIVATE)
-		ctx.match(FreeTokenType.FILE) -> syntaxError("顶层函数不支持 file 访问修饰符", ctx.previous)
-		ctx.match(FreeTokenType.INTERNAL) -> parseDeclaration(Modifier.INTERNAL)
-		ctx.match(FreeTokenType.MODULE) -> parseDeclaration(Modifier.MODULE)
-		ctx.match(FreeTokenType.PUBLIC) -> parseDeclaration(Modifier.PUBLIC)
-		else -> parseDeclaration(Modifier.PUBLIC)
+	private suspend fun parseDeclaration(): Declaration {
+		val modifiers = mutableSetOf<Modifier>()
+		modifiers += getAccessModifier()
+		when {
+			ctx.match(FreeTokenType.OPEN) -> modifiers += Modifier.OPEN
+			ctx.match(FreeTokenType.ABSTRACT) -> modifiers += Modifier.ABSTRACT
+			ctx.match(FreeTokenType.OVERRIDE) -> modifiers += Modifier.OVERRIDE
+			ctx.match(FreeTokenType.FINAL, FreeTokenType.OVERRIDE) -> {
+				modifiers += Modifier.FINAL
+				modifiers += Modifier.OVERRIDE
+			}
+		}
+		return TopLevelDeclarationMatcher.parseAndCheck(ctx, modifiers)
 	}
 	
-	private suspend fun parseDeclaration(access: Modifier): Declaration = when {
-		ctx.match(FreeTokenType.FUN) -> FunDeclarationParser(ctx).parse(access)
-		ctx.match(FreeTokenType.CLASS) -> ClassDeclarationParser(ctx).parse(access)
-		else -> syntaxError("未知的顶层声明: ", ctx.current)
+	private suspend fun getAccessModifier(): Modifier {
+		return when {
+			ctx.match(FreeTokenType.PRIVATE) -> Modifier.PRIVATE
+			ctx.match(FreeTokenType.FILE) -> syntaxError("顶层函数不支持 'file' 修饰符", ctx.previous)
+			ctx.match(FreeTokenType.INTERNAL) -> Modifier.INTERNAL
+			ctx.match(FreeTokenType.MODULE) -> Modifier.MODULE
+			ctx.match(FreeTokenType.PUBLIC) -> Modifier.PUBLIC
+			else -> Modifier.PUBLIC
+		}
 	}
 }

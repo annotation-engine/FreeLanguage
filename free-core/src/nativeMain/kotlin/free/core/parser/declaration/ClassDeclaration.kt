@@ -20,7 +20,7 @@ class ClassDeclarationParser(
 	private val ctx: FreeParserContext,
 ) {
 	
-	suspend fun parse(vararg modifiers: Modifier): ClassDeclaration {
+	suspend fun parse(modifiers: Set<Modifier>): ClassDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "类缺少名称")
 		val name = ctx.previous.value
 		val classAccess = getClassAccess(modifiers)
@@ -68,13 +68,13 @@ class ClassDeclarationParser(
 		}
 		val memberAccess = memberAccess ?: getDefaultMemberAccess(classAccess, ctx.previous)
 		return when {
-			ctx.match(FreeTokenType.FUN) -> FunDeclarationParser(ctx).parse(memberAccess)
-			ctx.match(FreeTokenType.CLASS) -> ClassDeclarationParser(ctx).parse(memberAccess)
+			ctx.match(FreeTokenType.FUN) -> FunDeclarationParser(ctx).parse(setOf(memberAccess))
+			ctx.match(FreeTokenType.CLASS) -> ClassDeclarationParser(ctx).parse(setOf(memberAccess))
 			else -> syntaxError("未知的类元素声明: ", ctx.current)
 		}
 	}
 	
-	private fun getClassAccess(modifiers: Array<out Modifier>): Modifier {
+	private fun getClassAccess(modifiers: Set<Modifier>): Modifier {
 		Modifiers.accessModifiers.forEach {
 			if (it in modifiers) return it
 		}

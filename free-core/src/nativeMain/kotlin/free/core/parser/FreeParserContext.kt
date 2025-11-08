@@ -39,12 +39,17 @@ class FreeParserContext(
 	/**
 	 * 匹配
 	 */
-	fun match(type: FreeTokenType): Boolean {
-		if (check(type)) {
-			advance()
-			return true
+	fun match(type: FreeTokenType, vararg types: FreeTokenType): Boolean {
+		if (!check(type)) {
+			return false
 		}
-		return false
+		types.forEachIndexed { index, type ->
+			if (peek(offset = index + 1)?.type != type) {
+				return false
+			}
+		}
+		position += types.size + 1
+		return true
 	}
 	
 	/**

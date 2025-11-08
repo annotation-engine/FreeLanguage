@@ -13,7 +13,6 @@ data object KeywordRecognizer : TokenRecognizer {
 		"enum" to FreeTokenType.ENUM,
 		"annotation" to FreeTokenType.ANNOTATION,
 		"struct" to FreeTokenType.STRUCT,
-		"serial" to FreeTokenType.SERIAL,
 		"public" to FreeTokenType.PUBLIC,
 		"module" to FreeTokenType.MODULE,
 		"internal" to FreeTokenType.INTERNAL,

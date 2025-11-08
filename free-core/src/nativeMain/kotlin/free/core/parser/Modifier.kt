@@ -7,14 +7,14 @@ import free.core.parser.Modifier.*
 enum class Modifier {
 	PRIVATE, FILE, INTERNAL, MODULE, PUBLIC,
 	
-	VAR, VAL
+	VAR, VAL,
+	
+	OPEN, ABSTRACT, OVERRIDE, FINAL
 }
 
 object Modifiers {
 	
 	val accessModifiers = listOf(PRIVATE, FILE, INTERNAL, MODULE, PUBLIC)
-	
-	val mutabilityModifiers = listOf(VAR, VAL)
 }
 
 /**

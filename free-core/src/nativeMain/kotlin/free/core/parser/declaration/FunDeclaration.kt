@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
 data class FunDeclaration(
 	val name: String,
 	val parameters: List<Parameter>,
-	val modifiers: List<Modifier>,
+	val modifiers: Set<Modifier>,
 	val returnTypes: List<TypeReference>,
 //	val statements: List<Statement>
 ) : Declaration
@@ -23,7 +23,7 @@ class FunDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(vararg modifiers: Modifier): FunDeclaration {
+	suspend fun parse(modifiers: Set<Modifier>): FunDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "函数缺少名称")
 		val funName = ctx.previous.value
 		ctx.expect(FreeTokenType.LPAREN, "函数 $funName 缺少 '('")
@@ -53,7 +53,7 @@ class FunDeclarationParser(
 		return FunDeclaration(
 			name = funName,
 			parameters = parameters,
-			modifiers = modifiers.toList(),
+			modifiers = modifiers.toSet(),
 			returnTypes = returnTypes,
 //			statements = emptyList(),
 		)

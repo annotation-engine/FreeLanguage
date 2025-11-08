@@ -82,7 +82,7 @@ class ClassParameterParser(
 			modifiers += when {
 				ctx.match(FreeTokenType.VAR) -> Modifier.VAR
 				ctx.match(FreeTokenType.VAL) -> Modifier.VAL
-				else -> syntaxError("主构造参数使用访问修饰符后必须跟 var 或 val", ctx.current)
+				else -> syntaxError("主构造参数使用访问修饰符后必须跟 'var' 或 'val'", ctx.current)
 			}
 		} else {
 			when {
