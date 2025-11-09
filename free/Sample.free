@@ -3,7 +3,7 @@ package free.example
 fun main() {
     println("Hello World")
 
-    val sum = add(10, 20)
+    val sum = add(num1: 10, num2: 20)
 }
 
 private fun add(num1: Int, num2: Int?): Int {
@@ -39,7 +39,7 @@ fun lambda2(callback: () -> [String, Int]) {
 
 }
 
-class Hello module(
+private class Hello(
     private val param1: String?,
     private var param2: Int[],
     val param3: () -> Int[],
@@ -56,9 +56,42 @@ class Hello module(
     }
 }
 
-private class Name {
+interface Interface1 {
 
-    fun hello() {
+    fun run()
+
+    single {
 
     }
+}
+
+class Test2 {
+
+    single {        # Test2.xxx
+
+    }
+
+    single Name {   # Test2.Name.xxx
+
+    }
+}
+
+single Single {
+
+    single InnerSingle {
+
+        single InnerInnerSingle
+    }
+}
+
+enum UserType {
+    ADMIN,
+    USER
+}
+
+enum Status(
+   code: Int,
+   msg: String
+) {
+    SUCCESS(code: 1)
 }

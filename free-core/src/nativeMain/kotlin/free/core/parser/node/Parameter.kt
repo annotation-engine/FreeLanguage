@@ -4,8 +4,8 @@ import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import free.core.parser.Modifier
-import free.core.parser.checkMemberAccess
-import free.core.parser.getDefaultMemberAccess
+import free.core.parser.getClassParameterAccessModifier
+import free.core.parser.getDefaultMemberAccessModifier
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -59,39 +59,25 @@ class ClassParameterParser(
 ) {
 	
 	suspend fun parse(classAccess: Modifier): Parameter {
-		return when {
-			ctx.match(FreeTokenType.PRIVATE) -> parse(classAccess, Modifier.PRIVATE)
-			ctx.match(FreeTokenType.FILE) -> parse(classAccess, Modifier.FILE)
-			ctx.match(FreeTokenType.INTERNAL) -> parse(classAccess, Modifier.INTERNAL)
-			ctx.match(FreeTokenType.MODULE) -> parse(classAccess, Modifier.MODULE)
-			ctx.match(FreeTokenType.PUBLIC) -> parse(classAccess, Modifier.PUBLIC)
-			else -> parse(classAccess, null)
-		}
-	}
-	
-	/**
-	 * private var name: String
-	 * var name: String 自动推导访问级别
-	 * name: String
-	 */
-	private suspend fun parse(classAccess: Modifier, parameterAccess: Modifier?): Parameter {
 		val modifiers = mutableSetOf<Modifier>()
+		var parameterAccess = getClassParameterAccessModifier(ctx, classAccess) {
+			"主构造参数访问修饰符与类访问修饰符不兼容"
+		}
+		val visibleModifier = when {
+			ctx.match(FreeTokenType.VAR) -> Modifier.VAR
+			ctx.match(FreeTokenType.VAL) -> Modifier.VAL
+			else -> if (parameterAccess != null) {
+				syntaxError("主构造参数使用访问修饰符后必须跟 'var' 或 'val'", ctx.current)
+			} else null
+		}
+		if (visibleModifier != null && parameterAccess == null) {
+			parameterAccess = getDefaultMemberAccessModifier(classAccess)
+		}
 		if (parameterAccess != null) {
-			checkMemberAccess(classAccess, parameterAccess, ctx.previous)
 			modifiers += parameterAccess
-			modifiers += when {
-				ctx.match(FreeTokenType.VAR) -> Modifier.VAR
-				ctx.match(FreeTokenType.VAL) -> Modifier.VAL
-				else -> syntaxError("主构造参数使用访问修饰符后必须跟 'var' 或 'val'", ctx.current)
-			}
-		} else {
-			when {
-				ctx.match(FreeTokenType.VAR) -> modifiers += Modifier.VAR
-				ctx.match(FreeTokenType.VAL) -> modifiers += Modifier.VAL
-			}
-			if (modifiers.isNotEmpty()) {
-				modifiers += getDefaultMemberAccess(classAccess, ctx.previous)
-			}
+		}
+		if (visibleModifier != null) {
+			modifiers += visibleModifier
 		}
 		ctx.expect(FreeTokenType.IDENTIFIER, "主构造参数缺少名称")
 		val name = ctx.previous.value

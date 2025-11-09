@@ -23,7 +23,7 @@ fun main(vararg args: String) {
 			"run" -> {
 				val paths = args.drop(1)
 				if (paths.isEmpty()) {
-					println("Error: Missing file path.\nUsage: free run <file1.free> [file2.free ...]")
+					println("请至少指定一个 Free 程序文件，使用 free help 查看使用手册")
 					return
 				}
 				run(args.drop(1))
@@ -32,7 +32,7 @@ fun main(vararg args: String) {
 			else -> help()
 		}
 	}
-	println("Execution time: $duration")
+	println("执行耗时: $duration")
 }
 
 private fun run(paths: List<String>) = runBlocking {
@@ -58,9 +58,9 @@ val json = Json {
 
 private fun help() {
 	val help = """
-		Usage:
-            free run <file1.free> [file2.free ...]   Run one or more Free source files.
-            free help                                Show command usage and options.
+		使用方式:
+            free run <file1.free> [file2.free ...]   运行一个或多个 Free 程序，第一个为主程序
+            free help                                查看使用手册
 	""".trimIndent()
 	println(help)
 }

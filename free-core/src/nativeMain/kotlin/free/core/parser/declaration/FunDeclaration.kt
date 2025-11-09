@@ -8,6 +8,7 @@ import free.core.parser.node.FunParameterParser
 import free.core.parser.node.Parameter
 import free.core.parser.node.TypeReference
 import free.core.parser.node.TypeReferenceParser
+import free.core.parser.statement.Statement
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,7 +17,7 @@ data class FunDeclaration(
 	val parameters: List<Parameter>,
 	val modifiers: Set<Modifier>,
 	val returnTypes: List<TypeReference>,
-//	val statements: List<Statement>
+	val statements: List<Statement> = emptyList(),
 ) : Declaration
 
 class FunDeclarationParser(
@@ -45,8 +46,15 @@ class FunDeclarationParser(
 			returnTypes += TypeReference(FreeTypes.Unit)
 		}
 		
-		ctx.expect(FreeTokenType.LBRACE, "函数 $funName 缺少 '{'")
-		
+		if (!ctx.match(FreeTokenType.LBRACE)) {
+			return FunDeclaration(
+				name = funName,
+				parameters = parameters,
+				modifiers = modifiers.toSet(),
+				returnTypes = returnTypes
+			)
+		}
+		val statements = mutableListOf<Statement>()
 		while (!ctx.match(FreeTokenType.RBRACE)) {
 			ctx.advance()
 		}
@@ -55,7 +63,7 @@ class FunDeclarationParser(
 			parameters = parameters,
 			modifiers = modifiers.toSet(),
 			returnTypes = returnTypes,
-//			statements = emptyList(),
+			statements = statements
 		)
 	}
 }
