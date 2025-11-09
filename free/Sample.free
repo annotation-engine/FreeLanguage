@@ -117,3 +117,7 @@ enum Status(
 
     abstract fun isSuccess(): Boolean
 }
+
+struct Data(
+    neq val name: String
+)

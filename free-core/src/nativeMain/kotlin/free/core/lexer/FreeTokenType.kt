@@ -3,13 +3,14 @@ package free.core.lexer
 enum class FreeTokenType {
 	FUN, CLASS, SINGLE, INTERFACE, STRUCT, ENUM, ANNOTATION,                        // class single interface enum annotation struct fun
 	PRIVATE, FILE, INTERNAL, MODULE, PUBLIC,                                        // public module internal file private
-	CONST, OPEN, ABSTRACT, ONLY, FINAL, OVERRIDE, SUPER, WITH, INIT, DELETE,        // const, open abstract only final override super with init delete
+	CONST, OPEN, ABSTRACT, FINAL, OVERRIDE, STRUCTLESS,                             // const open abstract final override structless
+	ONLY, WITH, INIT, DELETE,                                                       // only with init delete
 	VAR, VAL,                                                                       // var val
 	IF, ELSE, MATCH,                                                                // if else match
 	FOR, WHILE, DO,                                                                 // for while do while
 	RETURN, BREAK, CONTINUE,                                                        // return break continue
 	AS, IS,                                                                         // as is
-	PACKAGE, IMPORT, THIS, MUT,                                                     // package import this mut
+	PACKAGE, IMPORT, THIS, SUPER, MUT,                                              // package import this super mut
 	TRUE, FALSE, NULL,                                                              // true false null
 	NEWLINE, EOF, WHITE_SPACE, TAB,                                                 // \n EOF ' ' '\t'
 	IDENTIFIER, STRING, CHAR, NUMBER,                                               // 标识符 字符串 字符 数字
