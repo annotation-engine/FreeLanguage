@@ -15,7 +15,7 @@ class AnnotationDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	fun parse(modifiers: Set<Modifier>): AnnotationDeclaration {
+	suspend fun parse(modifiers: Set<Modifier>): AnnotationDeclaration {
 		TODO()
 	}
 }

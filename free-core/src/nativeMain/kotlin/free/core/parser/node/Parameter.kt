@@ -54,9 +54,26 @@ class FunParameterParser(
 	}
 }
 
-class ClassParameterParser(
+class ClassParameterParser private constructor(
 	private val ctx: FreeParserContext
 ) {
+	
+	companion object {
+		
+		suspend fun parses(ctx: FreeParserContext, classAccess: Modifier): List<Parameter> {
+			if (!ctx.match(FreeTokenType.LPAREN)) {
+				return emptyList()
+			}
+			val parameters = mutableListOf<Parameter>()
+			while (!ctx.match(FreeTokenType.RPAREN)) {
+				parameters += ClassParameterParser(ctx).parse(classAccess)
+				if (!ctx.check(FreeTokenType.RPAREN)) {
+					ctx.match(FreeTokenType.COMMA)
+				}
+			}
+			return parameters
+		}
+	}
 	
 	suspend fun parse(classAccess: Modifier): Parameter {
 		val modifiers = mutableSetOf<Modifier>()

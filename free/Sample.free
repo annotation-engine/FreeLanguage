@@ -93,5 +93,14 @@ enum Status(
    code: Int,
    msg: String
 ) {
-    SUCCESS(code: 1)
+    SUCCESS(code: 1, msg: "Hello") {
+
+        override fun test(): String {
+            return super.test()
+        }
+    };
+
+    fun test(): String {
+        return ""
+    }
 }

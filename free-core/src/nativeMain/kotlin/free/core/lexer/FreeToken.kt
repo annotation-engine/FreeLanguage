@@ -2,8 +2,10 @@ package free.core.lexer
 
 import free.core.FreeContext
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.serialization.Serializable
 
-class FreeToken(
+@Serializable
+data class FreeToken(
 	val type: FreeTokenType,
 	val value: String,
 	val start: Int,

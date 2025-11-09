@@ -112,7 +112,7 @@ suspend fun checkSupportedDeclarationModifiers(
 	when {
 		OPEN in modifiers && !isSupportedOpen -> syntaxError("${name}不支持 'open' 修饰符", ctx.previous)
 		ABSTRACT in modifiers && !isSupportedAbstract -> syntaxError("${name}不支持 'abstract' 修饰符", ctx.previous)
-		FINAL in modifiers && OVERRIDE in modifiers && !isSupportedFinalOverride -> syntaxError("顶层函数不支持 'final' 'override' 修饰符", ctx.previous)
-		OVERRIDE in modifiers && !isSupportedOverride -> syntaxError("顶层函数不支持 'override' 修饰符", ctx.previous)
+		FINAL in modifiers && OVERRIDE in modifiers && !isSupportedFinalOverride -> syntaxError("${name}不支持 \"final override\" 修饰符", ctx.previous)
+		OVERRIDE in modifiers && !isSupportedOverride -> syntaxError("${name}不支持 'override' 修饰符", ctx.previous)
 	}
 }

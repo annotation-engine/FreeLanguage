@@ -16,12 +16,16 @@ sealed interface MemberDeclarationMatcher<out D : Declaration> {
 		memberModifiers: Set<Modifier>
 	): D
 	
-	companion object Companion {
+	companion object {
 		
 		private val matchers = listOf(
 			MemberFunDeclarationMatcher,
 			MemberClassDeclarationMatcher,
-			MemberSingleDeclarationMatcher
+			MemberSingleDeclarationMatcher,
+			MemberInterfaceDeclarationMatcher,
+			MemberStructDeclarationMatcher,
+			MemberEnumDeclarationMatcher,
+			MemberAnnotationDeclarationMatcher
 		)
 		
 		suspend fun checkAndParse(
@@ -50,18 +54,25 @@ private object MemberFunDeclarationMatcher : MemberDeclarationMatcher<FunDeclara
 		parentModifiers: Set<Modifier>,
 		memberModifiers: Set<Modifier>
 	): FunDeclaration {
-		checkSupportedDeclarationModifiers(
-			ctx, memberModifiers, name = "成员函数",
-			isSupportedOpen = parentModifiers.isOpen,
-			isSupportedAbstract = parentModifiers.isAbstract,
-			isSupportedFinalOverride = parentModifiers.isAbstract,
-			isSupportedOverride = parentModifiers.isAbstract,
-		)
+		if (typeKind == TypeKind.ENUM_ENTRY) {
+			checkSupportedDeclarationModifiers(
+				ctx, memberModifiers, name = "枚举常量成员函数",
+				isSupportedOverride = true
+			)
+		} else {
+			checkSupportedDeclarationModifiers(
+				ctx, memberModifiers, name = "成员函数",
+				isSupportedOpen = parentModifiers.isOpen,
+				isSupportedAbstract = parentModifiers.isAbstract,
+				isSupportedFinalOverride = parentModifiers.isAbstract,
+				isSupportedOverride = parentModifiers.isAbstract,
+			)
+		}
 		return FunDeclarationParser(ctx).parse(memberModifiers)
 	}
 }
 
-private object MemberClassDeclarationMatcher : MemberDeclarationMatcher<FunDeclaration> {
+private object MemberClassDeclarationMatcher : MemberDeclarationMatcher<ClassDeclaration> {
 	
 	override val tokenType = FreeTokenType.CLASS
 	
@@ -70,13 +81,13 @@ private object MemberClassDeclarationMatcher : MemberDeclarationMatcher<FunDecla
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
 		memberModifiers: Set<Modifier>
-	): FunDeclaration {
+	): ClassDeclaration {
 		checkSupportedDeclarationModifiers(
 			ctx, memberModifiers, name = "内部类",
 			isSupportedOpen = true,
 			isSupportedAbstract = true
 		)
-		return FunDeclarationParser(ctx).parse(memberModifiers)
+		return ClassDeclarationParser(ctx).parse(memberModifiers)
 	}
 }
 
@@ -97,11 +108,80 @@ private object MemberSingleDeclarationMatcher : MemberDeclarationMatcher<SingleD
 	}
 }
 
+private object MemberInterfaceDeclarationMatcher : MemberDeclarationMatcher<InterfaceDeclaration> {
+	
+	override val tokenType = FreeTokenType.INTERFACE
+	
+	override suspend fun checkAndParse(
+		ctx: FreeParserContext,
+		typeKind: TypeKind,
+		parentModifiers: Set<Modifier>,
+		memberModifiers: Set<Modifier>
+	): InterfaceDeclaration {
+		checkSupportedDeclarationModifiers(
+			ctx, memberModifiers, name = "接口",
+		)
+		return InterfaceDeclarationParser(ctx).parse(memberModifiers)
+	}
+}
+
+private object MemberStructDeclarationMatcher : MemberDeclarationMatcher<StructDeclaration> {
+	
+	override val tokenType = FreeTokenType.STRUCT
+	
+	override suspend fun checkAndParse(
+		ctx: FreeParserContext,
+		typeKind: TypeKind,
+		parentModifiers: Set<Modifier>,
+		memberModifiers: Set<Modifier>
+	): StructDeclaration {
+		checkSupportedDeclarationModifiers(
+			ctx, memberModifiers, name = "结构体",
+		)
+		return StructDeclarationParser(ctx).parse(memberModifiers)
+	}
+}
+
+private object MemberEnumDeclarationMatcher : MemberDeclarationMatcher<EnumDeclaration> {
+	
+	override val tokenType = FreeTokenType.ENUM
+	
+	override suspend fun checkAndParse(
+		ctx: FreeParserContext,
+		typeKind: TypeKind,
+		parentModifiers: Set<Modifier>,
+		memberModifiers: Set<Modifier>
+	): EnumDeclaration {
+		checkSupportedDeclarationModifiers(
+			ctx, memberModifiers, name = "枚举",
+		)
+		return EnumDeclarationParser(ctx).parse(memberModifiers)
+	}
+}
+
+private object MemberAnnotationDeclarationMatcher : MemberDeclarationMatcher<AnnotationDeclaration> {
+	
+	override val tokenType = FreeTokenType.ANNOTATION
+	
+	override suspend fun checkAndParse(
+		ctx: FreeParserContext,
+		typeKind: TypeKind,
+		parentModifiers: Set<Modifier>,
+		memberModifiers: Set<Modifier>
+	): AnnotationDeclaration {
+		checkSupportedDeclarationModifiers(
+			ctx, memberModifiers, name = "注解",
+		)
+		return AnnotationDeclarationParser(ctx).parse(memberModifiers)
+	}
+}
+
 enum class TypeKind {
 	CLASS,
 	SINGLE,
 	INTERFACE,
 	STRUCT,
 	ENUM,
+	ENUM_ENTRY,
 	ANNOTATION
 }

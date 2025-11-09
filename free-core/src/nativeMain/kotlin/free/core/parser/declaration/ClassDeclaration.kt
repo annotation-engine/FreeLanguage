@@ -29,15 +29,7 @@ class ClassDeclarationParser(
 		constructorModifiers += getMemberAccessModifier(ctx, classAccess) {
 			"主构造函数访问修饰符与类访问修饰符不兼容"
 		}
-		val parameters = mutableListOf<Parameter>()
-		if (ctx.match(FreeTokenType.LPAREN)) {
-			while (!ctx.match(FreeTokenType.RPAREN)) {
-				parameters += ClassParameterParser(ctx).parse(classAccess)
-				if (!ctx.check(FreeTokenType.RPAREN)) {
-					ctx.match(FreeTokenType.COMMA)
-				}
-			}
-		}
+		val parameters = ClassParameterParser.parses(ctx, classAccess)
 		
 		if (!ctx.match(FreeTokenType.LBRACE)) {
 			return ClassDeclaration(
