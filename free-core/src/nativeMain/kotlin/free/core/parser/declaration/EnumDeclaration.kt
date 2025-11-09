@@ -43,6 +43,7 @@ class EnumDeclarationParser(
 				entries = entries
 			)
 		}
+		
 		val members = mutableListOf<Declaration>()
 		while (!ctx.match(FreeTokenType.RBRACE)) {
 			members += parseMemberDeclaration(enumAccess, modifiers)

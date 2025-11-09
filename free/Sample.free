@@ -84,6 +84,15 @@ single Single {
     }
 }
 
+abstract class AbstractClass {
+
+    fun test1() {
+
+    }
+
+    abstract fun test2()
+}
+
 enum UserType {
     ADMIN,
     USER
@@ -93,14 +102,18 @@ enum Status(
    code: Int,
    msg: String
 ) {
-    SUCCESS(code: 1, msg: "Hello") {
+    SUCCESS(code: 0, msg: "Success") {
 
-        override fun test(): String {
-            return super.test()
+        override fun isSuccess(): Boolean {
+            return true
+        }
+    },
+    FAILURE(code: -1, msg: "Failure") {
+
+        override fun isSuccess(): Boolean {
+            return false
         }
     };
 
-    fun test(): String {
-        return ""
-    }
+    abstract fun isSuccess(): Boolean
 }

@@ -61,6 +61,11 @@ class SingleDeclarationParser(
 			"访问修饰符与类访问修饰符不兼容"
 		}
 		memberModifiers += getDeclarationModifiers(ctx)
-		return MemberDeclarationMatcher.checkAndParse(ctx, TypeKind.SINGLE, singleModifiers, singleModifiers)
+		return MemberDeclarationMatcher.checkAndParse(
+			ctx = ctx,
+			typeKind = TypeKind.SINGLE,
+			parentModifiers = singleModifiers,
+			memberModifiers = memberModifiers
+		)
 	}
 }

@@ -54,13 +54,19 @@ private object MemberFunDeclarationMatcher : MemberDeclarationMatcher<FunDeclara
 		parentModifiers: Set<Modifier>,
 		memberModifiers: Set<Modifier>
 	): FunDeclaration {
-		if (typeKind == TypeKind.ENUM_ENTRY) {
-			checkSupportedDeclarationModifiers(
+		when (typeKind) {
+			TypeKind.ENUM -> checkSupportedDeclarationModifiers(
+				ctx, memberModifiers, name = "枚举成员函数",
+				isSupportedOpen = true,
+				isSupportedAbstract = true,
+			)
+			
+			TypeKind.ENUM_ENTRY -> checkSupportedDeclarationModifiers(
 				ctx, memberModifiers, name = "枚举常量成员函数",
 				isSupportedOverride = true
 			)
-		} else {
-			checkSupportedDeclarationModifiers(
+			
+			else -> checkSupportedDeclarationModifiers(
 				ctx, memberModifiers, name = "成员函数",
 				isSupportedOpen = parentModifiers.isOpen,
 				isSupportedAbstract = parentModifiers.isAbstract,

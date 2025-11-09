@@ -29,7 +29,7 @@ val Set<Modifier>.isOpen: Boolean
 	get() = OPEN in this
 
 val Set<Modifier>.isAbstract: Boolean
-	get() = OPEN in this
+	get() = ABSTRACT in this
 
 suspend fun getTopLevelAccessModifier(ctx: FreeParserContext): Modifier {
 	return when {
