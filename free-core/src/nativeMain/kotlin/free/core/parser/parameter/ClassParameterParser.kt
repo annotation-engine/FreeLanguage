@@ -8,7 +8,10 @@ import free.core.parser.getClassParameterAccessModifier
 import free.core.parser.getDefaultMemberAccessModifier
 import free.core.parser.node.TypeReferenceParser
 
-suspend fun parseClassParameters(ctx: FreeParserContext, classAccess: Modifier): List<Parameter> {
+suspend fun parseClassParameters(
+	ctx: FreeParserContext,
+	classAccess: Modifier
+): List<Parameter> {
 	if (!ctx.match(FreeTokenType.LPAREN)) {
 		return emptyList()
 	}

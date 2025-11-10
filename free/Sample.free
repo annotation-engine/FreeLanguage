@@ -129,3 +129,5 @@ struct Info(
     val address: String,
     val number: Int
 )
+
+annotation Target(val name: String)
