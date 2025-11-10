@@ -4,8 +4,8 @@ import free.core.lexer.FreeTokenType
 import free.core.parser.*
 import free.core.parser.matcher.MemberDeclarationMatcher
 import free.core.parser.matcher.TypeKind
-import free.core.parser.node.ClassParameterParser
-import free.core.parser.node.Parameter
+import free.core.parser.parameter.Parameter
+import free.core.parser.parameter.parseClassParameters
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -29,8 +29,7 @@ class ClassDeclarationParser(
 		constructorModifiers += getMemberAccessModifier(ctx, classAccess) {
 			"主构造函数访问修饰符与类访问修饰符不兼容"
 		}
-		val parameters = ClassParameterParser.parses(ctx, classAccess)
-		
+		val parameters = parseClassParameters(ctx, classAccess)
 		if (!ctx.match(FreeTokenType.LBRACE)) {
 			return ClassDeclaration(
 				name = name,

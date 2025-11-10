@@ -6,20 +6,15 @@ import free.core.parser.Modifier.*
 
 enum class Modifier {
 	PRIVATE, FILE, INTERNAL, MODULE, PUBLIC,
-	
 	VAR, VAL,
-	
-	OPEN, ABSTRACT, OVERRIDE, FINAL
+	OPEN, ABSTRACT, OVERRIDE, FINAL, IGNORE
 }
 
-private object Modifiers {
-	
-	val accessModifiers = listOf(PRIVATE, FILE, INTERNAL, MODULE, PUBLIC)
-}
+private val accessModifiers = setOf(PRIVATE, FILE, INTERNAL, MODULE, PUBLIC)
 
 val Set<Modifier>.access: Modifier
 	get() {
-		Modifiers.accessModifiers.forEach {
+		accessModifiers.forEach {
 			if (it in this) return it
 		}
 		error("未知的修饰符")

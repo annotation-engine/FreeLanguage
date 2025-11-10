@@ -3,6 +3,8 @@ package free.core.parser.node
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
+import free.core.parser.parameter.Parameter
+import free.core.parser.parameter.parseLambdaParameters
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -30,36 +32,35 @@ class TypeReferenceParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(): TypeReference {
+	suspend fun parse(isSupportedLambda: Boolean = true): TypeReference {
 		return if (ctx.match(FreeTokenType.LPAREN)) {
-			parseLambda()
+			parseLambdaType(isSupportedLambda)
 		} else {
-			parseNamed()
+			parseNamedType()
 		}
 	}
 	
-	private suspend fun parseLambda(): TypeReference {
-		val parameters = mutableListOf<Parameter>()
-		while (!ctx.match(FreeTokenType.RPAREN)) {
-			parameters += LambdaParameterParser(ctx).parse()
-			if (!ctx.check(FreeTokenType.RPAREN)) {
-				ctx.expect(FreeTokenType.COMMA, "函数参数缺少 ','")
-			}
-		}
+	private suspend fun parseLambdaType(
+		isSupportedLambda: Boolean
+	): TypeReference {
+		val parameters = parseLambdaParameters(ctx)
 		if (ctx.match(FreeTokenType.ARROW)) {
+			if (!isSupportedLambda) {
+				syntaxError("不支持 Lambda 类型", ctx.previous)
+			}
 			val returnTypes = mutableListOf<TypeReference>()
-			if (ctx.match(FreeTokenType.LBRACKET)) {    // 多返回类型
+			if (ctx.match(FreeTokenType.LBRACKET)) {
 				while (!ctx.match(FreeTokenType.RBRACKET)) {
 					returnTypes += this.parse()
 					if (!ctx.check(FreeTokenType.RBRACKET)) {
-						ctx.expect(FreeTokenType.COMMA, "函数参数缺少 ','")
+						ctx.expect(FreeTokenType.COMMA, "Lambda 缺少 ','")
 					}
 				}
 				if (returnTypes.isEmpty()) {
-					syntaxError("函数参数多返回值类型语法错误", ctx.previous)
+					syntaxError("Lambda 多返回值类型语法错误", ctx.previous)
 				}
 				if (returnTypes.size == 1) {
-					syntaxError("函数参数多返回值类型至少需要2个", ctx.previous)
+					syntaxError("Lambda 多返回值类型至少需要2个", ctx.previous)
 				}
 			} else {
 				returnTypes += this.parse()
@@ -93,7 +94,7 @@ class TypeReferenceParser(
 			)
 		} else {
 			if (parameters.size != 1) {
-				syntaxError("函数参数缺少 '->'", ctx.current)
+				syntaxError("Lambda 缺少 '->'", ctx.current)
 			}
 			val parameter = parameters.single()
 			if (parameter.name != "") {
@@ -113,7 +114,7 @@ class TypeReferenceParser(
 		}
 	}
 	
-	private suspend fun parseNamed(): TypeReference {
+	private suspend fun parseNamedType(): TypeReference {
 		val type = mutableListOf<String>()
 		do {
 			ctx.expect(FreeTokenType.IDENTIFIER, "无法识别标识符")

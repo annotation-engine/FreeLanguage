@@ -5,8 +5,8 @@ import free.core.lexer.FreeTokenType
 import free.core.parser.*
 import free.core.parser.matcher.MemberDeclarationMatcher
 import free.core.parser.matcher.TypeKind
-import free.core.parser.node.ClassParameterParser
-import free.core.parser.node.Parameter
+import free.core.parser.parameter.Parameter
+import free.core.parser.parameter.parseClassParameters
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -32,7 +32,7 @@ class EnumDeclarationParser(
 		ctx.expect(FreeTokenType.IDENTIFIER, "枚举缺少名称")
 		val name = ctx.previous.value
 		val enumAccess = modifiers.access
-		val parameters = ClassParameterParser.parses(ctx, enumAccess)
+		val parameters = parseClassParameters(ctx, enumAccess)
 		ctx.expect(FreeTokenType.LBRACE, "枚举缺少 '{'")
 		val entries = parseEnumEntries(enumAccess)
 		if (ctx.previous.type == FreeTokenType.RBRACE) {

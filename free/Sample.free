@@ -119,5 +119,13 @@ enum Status(
 }
 
 struct Data(
-    ignore val name: String
+    ignore val param1: String,
+    ignore var param2: Int?,
+    val param3: Double,
+    val param4: Info
+)
+
+struct Info(
+    val address: String,
+    val number: Int
 )
