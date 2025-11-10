@@ -6,7 +6,7 @@ fun main() {
     val sum = add(num1: 10, num2: 20)
 }
 
-private fun add(num1: Int, num2: Int?): Int {
+private const fun add(num1: Int, num2: Int?): Int {
     return num1 + num2
 }
 

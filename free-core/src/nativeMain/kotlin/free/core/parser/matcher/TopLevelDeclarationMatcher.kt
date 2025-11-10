@@ -41,7 +41,10 @@ private object TopLevelFunDeclarationMatcher : TopLevelDeclarationMatcher<FunDec
 	override val tokenType = FreeTokenType.FUN
 	
 	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): FunDeclaration {
-		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层函数")
+		checkSupportedDeclarationModifiers(
+			ctx, modifiers, "顶层函数",
+			isSupportedConst = true
+		)
 		return FunDeclarationParser(ctx).parse(modifiers)
 	}
 }
@@ -51,7 +54,11 @@ private object TopLevelClassDeclarationMatcher : TopLevelDeclarationMatcher<Clas
 	override val tokenType = FreeTokenType.CLASS
 	
 	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): ClassDeclaration {
-		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层类", isSupportedOpen = true, isSupportedAbstract = true)
+		checkSupportedDeclarationModifiers(
+			ctx, modifiers, "顶层类",
+			isSupportedOpen = true,
+			isSupportedAbstract = true
+		)
 		return ClassDeclarationParser(ctx).parse(modifiers)
 	}
 }

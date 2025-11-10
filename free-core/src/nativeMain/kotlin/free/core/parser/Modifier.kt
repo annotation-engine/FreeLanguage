@@ -7,7 +7,8 @@ import free.core.parser.Modifier.*
 enum class Modifier {
 	PRIVATE, FILE, INTERNAL, MODULE, PUBLIC,
 	VAR, VAL,
-	OPEN, ABSTRACT, OVERRIDE, FINAL, IGNORE
+	OPEN, ABSTRACT, OVERRIDE, FINAL, CONST,
+	IGNORE
 }
 
 private val accessModifiers = setOf(PRIVATE, FILE, INTERNAL, MODULE, PUBLIC)
@@ -84,6 +85,7 @@ suspend fun getClassParameterAccessModifier(ctx: FreeParserContext, classAccess:
 fun getDeclarationModifiers(ctx: FreeParserContext): Set<Modifier> {
 	val modifiers = mutableSetOf<Modifier>()
 	when {
+		ctx.match(FreeTokenType.CONST) -> modifiers += CONST
 		ctx.match(FreeTokenType.OPEN) -> modifiers += OPEN
 		ctx.match(FreeTokenType.ABSTRACT) -> modifiers += ABSTRACT
 		ctx.match(FreeTokenType.OVERRIDE) -> modifiers += OVERRIDE
@@ -99,12 +101,14 @@ suspend fun checkSupportedDeclarationModifiers(
 	ctx: FreeParserContext,
 	modifiers: Set<Modifier>,
 	name: String,
+	isSupportedConst: Boolean = false,
 	isSupportedOpen: Boolean = false,
 	isSupportedAbstract: Boolean = false,
 	isSupportedFinalOverride: Boolean = false,
 	isSupportedOverride: Boolean = false
 ) {
 	when {
+		CONST in modifiers && !isSupportedConst -> syntaxError("${name}不支持 'const' 修饰符", ctx.previous)
 		OPEN in modifiers && !isSupportedOpen -> syntaxError("${name}不支持 'open' 修饰符", ctx.previous)
 		ABSTRACT in modifiers && !isSupportedAbstract -> syntaxError("${name}不支持 'abstract' 修饰符", ctx.previous)
 		FINAL in modifiers && OVERRIDE in modifiers && !isSupportedFinalOverride -> syntaxError("${name}不支持 \"final override\" 修饰符", ctx.previous)
