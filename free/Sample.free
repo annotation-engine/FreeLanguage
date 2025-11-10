@@ -119,5 +119,5 @@ enum Status(
 }
 
 struct Data(
-    neq val name: String
+    ignore val name: String
 )

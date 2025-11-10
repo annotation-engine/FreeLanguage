@@ -24,7 +24,7 @@ data object KeywordRecognizer : TokenRecognizer {
 		"abstract" to FreeTokenType.ABSTRACT,
 		"final" to FreeTokenType.FINAL,
 		"override" to FreeTokenType.OVERRIDE,
-		"structless" to FreeTokenType.STRUCTLESS,
+		"ignore" to FreeTokenType.IGNORE,
 		"only" to FreeTokenType.ONLY,
 		"with" to FreeTokenType.WITH,
 		"init" to FreeTokenType.INIT,
