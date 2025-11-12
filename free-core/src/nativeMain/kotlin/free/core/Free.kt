@@ -2,6 +2,7 @@ package free.core
 
 import free.core.io.File
 import free.core.lexer.FreeLexer
+import free.core.lexer.formatToString
 import free.core.parser.FreeParser
 import free.core.parser.node.Program
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,7 @@ private fun run(paths: List<String>) = runBlocking {
 		async(Dispatchers.Default + freeContext) {
 			val input = file.readFileChars()
 			val rawTokens = FreeLexer(input).lex()
+			println(rawTokens.formatToString())
 			FreeParser(rawTokens).parse()
 		}
 	}
@@ -54,6 +56,7 @@ private fun run(paths: List<String>) = runBlocking {
 val json = Json {
 	prettyPrint = true
 	encodeDefaults = true
+	classDiscriminator = "class"
 }
 
 private fun help() {

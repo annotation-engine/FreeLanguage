@@ -4,6 +4,7 @@ import free.core.constants.FreeTypes
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import free.core.parser.Modifier
+import free.core.parser.matcher.StatementMatcher
 import free.core.parser.node.TypeReference
 import free.core.parser.node.TypeReferenceParser
 import free.core.parser.parameter.Parameter
@@ -48,7 +49,7 @@ class FunDeclarationParser(
 		}
 		val statements = mutableListOf<Statement>()
 		while (!ctx.match(FreeTokenType.RBRACE)) {
-			ctx.advance()
+			statements += StatementMatcher.parse(ctx)
 		}
 		return FunDeclaration(
 			name = funName,

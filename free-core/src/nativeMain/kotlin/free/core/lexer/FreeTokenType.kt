@@ -1,27 +1,153 @@
 package free.core.lexer
 
 enum class FreeTokenType {
-	FUN, CLASS, SINGLE, INTERFACE, STRUCT, ENUM, ANNOTATION,                        // class single interface enum annotation struct fun
-	PRIVATE, FILE, INTERNAL, MODULE, PUBLIC,                                        // public module internal file private
-	OPEN, ABSTRACT, FINAL, OVERRIDE, CONST, IGNORE,                                 // const open abstract final override ignore
-	ONLY, WITH, INIT, DELETE,                                                       // only with init delete
-	VAR, VAL,                                                                       // var val
-	IF, ELSE, MATCH,                                                                // if else match
-	FOR, WHILE, DO,                                                                 // for while do while
-	RETURN, BREAK, CONTINUE,                                                        // return break continue
-	AS, IS,                                                                         // as is
-	PACKAGE, IMPORT, THIS, SUPER, MUT,                                              // package import this super mut
-	TRUE, FALSE, NULL,                                                              // true false null
-	NEWLINE, EOF, WHITE_SPACE, TAB,                                                 // \n EOF ' ' '\t'
-	IDENTIFIER, STRING, CHAR, NUMBER,                                               // 标识符 字符串 字符 数字
-	PLUS, MINUS, STAR, SLASH, PERCENT, DOUBLE_STAR,                                 // + - * / % **
-	DOUBLE_PLUS, DOUBLE_MINUS,                                                      // ++ --
-	ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN, PERCENT_ASSIGN,   // = += -= *= /= %=
-	EQUALS, NOT_EQUALS, GT, GT_EQUALS, LT, LT_EQUALS, TRIPLE_EQUAL,                 // == != > >= < <= ===
-	AND, OR, NOT,                                                                   // && || !
-	BIT_AND, BIT_OR, BIT_XOR, BIT_NOT, SHL, SHR, USHR,                              // & | ^ ~ << >> >>>
-	DOT, COMMA, SEMICOLON, COLON, DOUBLE_COLON, QUESTION, AT, COMMENT,              // . , ; : :: ? @ #
-	IN, NOT_IN,                                                                     // ~> !～>
-	ELVIS, ARROW, DOUBLE_DOT, QUESTION_ASSIGN, QUESTION_DOT, NOT_NULL_ASSERT,       // ?: -> .. ?= ?. !!
-	LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE,                             // ( ) [ ] { }
+	// ==============================
+	// 关键字
+	// ==============================
+	FUN,                // fun
+	CLASS,              // class
+	SINGLE,             // single
+	INTERFACE,          // interface
+	STRUCT,             // struct
+	ENUM,               // enum
+	ANNOTATION,         // annotation
+	PRIVATE,            // private
+	FILE,               // file
+	INTERNAL,           // internal
+	MODULE,             // module
+	PUBLIC,             // public
+	OPEN,               // open
+	ABSTRACT,           // abstract
+	FINAL,              // final
+	OVERRIDE,           // override
+	CONST,              // const
+	IGNORE,             // ignore
+	ONLY,               // only
+	WITH,               // with
+	INIT,               // init
+	DELETE,             // delete
+	VAR,                // var
+	VAL,                // val
+	IF,                 // if
+	ELSE,               // else
+	MATCH,              // match
+	FOR,                // for
+	WHILE,              // while
+	DO,                 // do
+	RETURN,             // return
+	BREAK,              // break
+	CONTINUE,           // continue
+	AS,                 // as
+	IS,                 // is
+	PACKAGE,            // package
+	IMPORT,             // import
+	THIS,               // this
+	SUPER,              // super
+	TRUE,               // true
+	FALSE,              // false
+	NULL,               // null
+	
+	// ==============================
+	// 标识符
+	// ==============================
+	IDENTIFIER,         // 标识符
+	
+	// ==============================
+	// 字面量
+	// ==============================
+	STRING,             // 字符串
+	CHAR,               // 字符
+	NUMBER,             // 数字
+	
+	// ==============================
+	// 一元运算符
+	// ==============================
+	PLUS,               // +
+	MINUS,              // -
+	NOT,                // !
+	BIT_NOT,            // ~
+	DOUBLE_PLUS,        // ++
+	DOUBLE_MINUS,       // --
+	
+	// ==============================
+	// 二元运算符
+	// ==============================
+	STAR,               // *
+	SLASH,              // /
+	PERCENT,            // %
+	DOUBLE_STAR,        // **
+	EQUALS,             // ==
+	NOT_EQUALS,         // !=
+	GT,                 // >
+	GT_EQUALS,          // >=
+	LT,                 // <
+	LT_EQUALS,          // <=
+	TRIPLE_EQUALS,      // ===
+	TRIPLE_NOT_EQUALS,  // !==
+	IN,                 // ~>
+	NOT_IN,             // !>
+	BIT_AND,            // &
+	BIT_OR,             // |
+	BIT_XOR,            // ^
+	SHL,                // <<
+	SHR,                // >>
+	USHR,               // >>>
+	
+	// ==============================
+	// 逻辑运算符
+	// ==============================
+	AND,                // &&
+	OR,                 // ||
+	
+	// ==============================
+	// 三元运算符
+	// ==============================
+	COLON,              // :
+	QUESTION,           // ?
+	ELVIS,              // ?:
+	
+	// ==============================
+	// 赋值运算符
+	// ==============================
+	ASSIGN,             // =
+	QUESTION_ASSIGN,    // ?=
+	PLUS_ASSIGN,        // +=
+	MINUS_ASSIGN,       // -=
+	STAR_ASSIGN,        // *=
+	SLASH_ASSIGN,       // /=
+	PERCENT_ASSIGN,     // %=
+	
+	// ==============================
+	// 成员访问
+	// ==============================
+	DOT,                // .
+	QUESTION_DOT,       // ?.
+	NOT_NULL_ASSERT,    // !!
+	NOT_NULL_ACCESS,    // !.
+	DOUBLE_COLON,       // ::
+	LPAREN,             // (
+	RPAREN,             // )
+	LBRACKET,           // [
+	RBRACKET,           // ]
+	
+	// ==============================
+	// 分隔符
+	// ==============================
+	
+	COMMA,              // ,
+	SEMICOLON,          // ;
+	LBRACE,             // {
+	RBRACE,             // }
+	
+	// ==============================
+	// 特殊
+	// ==============================
+	AT,                 // @
+	ARROW,              // ->
+	DOUBLE_DOT,         // ..
+	COMMENT,            // #
+	NEWLINE,            // 换行符
+	WHITE_SPACE,        // 空格
+	TAB,                // 制表符
+	EOF,                // 结束符
 }

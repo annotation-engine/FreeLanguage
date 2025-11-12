@@ -46,7 +46,6 @@ data object KeywordRecognizer : TokenRecognizer {
 		"import" to FreeTokenType.IMPORT,
 		"this" to FreeTokenType.THIS,
 		"super" to FreeTokenType.SUPER,
-		"mut" to FreeTokenType.MUT,
 		"true" to FreeTokenType.TRUE,
 		"false" to FreeTokenType.FALSE,
 		"null" to FreeTokenType.NULL,

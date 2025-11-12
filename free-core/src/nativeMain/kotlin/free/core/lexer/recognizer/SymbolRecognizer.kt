@@ -8,8 +8,8 @@ data object SymbolRecognizer : TokenRecognizer {
 	private val tokenTypeMap = mapOf(
 		3 to mapOf(
 			">>>" to FreeTokenType.USHR,
-			"!~>" to FreeTokenType.NOT_IN,
-			"===" to FreeTokenType.TRIPLE_EQUAL
+			"===" to FreeTokenType.TRIPLE_EQUALS,
+			"!==" to FreeTokenType.TRIPLE_NOT_EQUALS
 		),
 		2 to mapOf(
 			"**" to FreeTokenType.DOUBLE_STAR,
@@ -29,11 +29,13 @@ data object SymbolRecognizer : TokenRecognizer {
 			"<<" to FreeTokenType.SHL,
 			">>" to FreeTokenType.SHR,
 			"~>" to FreeTokenType.IN,
+			"!>" to FreeTokenType.NOT_IN,
 			"?:" to FreeTokenType.ELVIS,
 			"->" to FreeTokenType.ARROW,
 			".." to FreeTokenType.DOUBLE_DOT,
 			"?=" to FreeTokenType.QUESTION_ASSIGN,
 			"?." to FreeTokenType.QUESTION_DOT,
+			"!." to FreeTokenType.NOT_NULL_ACCESS,
 			"!!" to FreeTokenType.NOT_NULL_ASSERT,
 			"::" to FreeTokenType.DOUBLE_COLON
 		),
