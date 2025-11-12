@@ -1,5 +1,9 @@
 package free.example
 
+import free.**
+import free.println as println2
+import free.**
+
 fun main() {
     val n1 = 10
     val n2 = 20

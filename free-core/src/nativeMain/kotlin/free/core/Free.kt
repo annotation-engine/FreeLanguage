@@ -2,7 +2,6 @@ package free.core
 
 import free.core.io.File
 import free.core.lexer.FreeLexer
-import free.core.lexer.formatToString
 import free.core.parser.FreeParser
 import free.core.parser.node.Program
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,7 @@ fun main(vararg args: String) {
 			return
 		}
 		when (command) {
-			"run" -> {
+			"-c" -> {
 				val paths = args.drop(1)
 				if (paths.isEmpty()) {
 					println("请至少指定一个 Free 程序文件，使用 free help 查看使用手册")
@@ -44,7 +43,7 @@ private fun run(paths: List<String>) = runBlocking {
 		async(Dispatchers.Default + freeContext) {
 			val input = file.readFileChars()
 			val rawTokens = FreeLexer(input).lex()
-			println(rawTokens.formatToString())
+//			println(rawTokens.formatToString())
 			FreeParser(rawTokens).parse()
 		}
 	}
@@ -62,8 +61,8 @@ val json = Json {
 private fun help() {
 	val help = """
 		使用方式:
-            free run <file1.free> [file2.free ...]   运行一个或多个 Free 程序，第一个为主程序
-            free help                                查看使用手册
+            free -c <file1.free> [file2.free ...]   编译 Free 程序文件
+            free -h                                 查看使用手册
 	""".trimIndent()
 	println(help)
 }

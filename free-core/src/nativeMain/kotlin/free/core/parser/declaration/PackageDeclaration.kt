@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PackageDeclaration(
-	val name: String
+	val paths: List<String>,
 ) : AstNode
 
 class PackageDeclarationParser(
@@ -25,8 +25,8 @@ class PackageDeclarationParser(
 				ctx.expect(FreeTokenType.IDENTIFIER, "'.' 后应跟标识符")
 				packages += ctx.previous.value
 			}
-			return PackageDeclaration(packages.joinToString("."))
+			return PackageDeclaration(packages)
 		}
-		syntaxError("文件缺少包定义", ctx.current.line, ctx.current.column)
+		syntaxError("文件缺少包定义", ctx.current)
 	}
 }
