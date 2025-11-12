@@ -1,5 +1,6 @@
 package free.core.parser.expression
 
+import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import kotlinx.serialization.Serializable
 
@@ -14,9 +15,10 @@ class SuffixUnaryExpressionParser(
 ) {
 	
 	suspend fun parse(): SuffixUnaryExpression {
-		val operator = ctx.next.type.toOperator()
-		val expression = PrimaryExpressionParser(ctx).parse(isUnary = true)
+		ctx.expect(FreeTokenType.IDENTIFIER, "一元运算符前必须跟标识符")
+		val expression = IdentifierExpression(ctx.previous.value)
 		ctx.advance()
+		val operator = ctx.previous.type.toOperator()
 		return SuffixUnaryExpression(expression, operator)
 	}
 }

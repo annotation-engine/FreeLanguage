@@ -29,6 +29,7 @@ class VariableDeclarationStatementParser(
 			var expression: Expression? = null
 			do {
 				expression = ExpressionMatcher.parse(ctx, expression)
+				// val a = 10 + (20 + (1 + 2) - 10)
 			} while (!isStatementEnd(ctx))
 			expression
 		} else null

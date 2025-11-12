@@ -1,5 +1,6 @@
 package free.core.parser.expression
 
+import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import kotlinx.serialization.Serializable
 
@@ -15,7 +16,8 @@ class PrefixUnaryExpressionParser(
 	
 	suspend fun parse(): PrefixUnaryExpression {
 		val operator = ctx.previous.type.toOperator()
-		val expression = PrimaryExpressionParser(ctx).parse(isUnary = true)
+		ctx.expect(FreeTokenType.IDENTIFIER, "一元运算符后只允许跟标识符")
+		val expression = IdentifierExpression(ctx.previous.value)
 		return PrefixUnaryExpression(operator, expression)
 	}
 }

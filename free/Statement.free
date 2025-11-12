@@ -2,10 +2,10 @@ package free.example
 
 import free.**
 import free.println as println2
-import free.**
 
 fun main() {
-    val n1 = 10
-    val n2 = 20
+    var n = 0
+    val n1 = ++n / n--
+    val n2 = n++ + 10
     val n3 = n1 + n2 * 5 + 6**10
 }

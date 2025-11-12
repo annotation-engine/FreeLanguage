@@ -26,9 +26,6 @@ class FreeParserContext(
 		return tokens.getOrNull(position + offset)
 	}
 	
-	/**
-	 * 前进
-	 */
 	fun advance(): FreeToken {
 		if (position < tokens.size - 1) {
 			position++
@@ -36,9 +33,6 @@ class FreeParserContext(
 		return current
 	}
 	
-	/**
-	 * 匹配
-	 */
 	fun match(type: FreeTokenType, vararg types: FreeTokenType): Boolean {
 		if (!check(type)) {
 			return false
@@ -52,9 +46,6 @@ class FreeParserContext(
 		return true
 	}
 	
-	/**
-	 * 检查
-	 */
 	fun check(type: FreeTokenType): Boolean {
 		return !isAtEnd() && current.type == type
 	}
@@ -67,9 +58,6 @@ class FreeParserContext(
 		syntaxError(errorMessage, current.line, current.column)
 	}
 	
-	/**
-	 * 是否结束
-	 */
 	fun isAtEnd(): Boolean {
 		return position >= tokens.size || current.type == FreeTokenType.EOF
 	}
