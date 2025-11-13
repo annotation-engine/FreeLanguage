@@ -1,5 +1,6 @@
 package free.core.parser.parameter
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -8,7 +9,8 @@ import free.core.parser.getClassParameterAccessModifier
 import free.core.parser.getDefaultMemberAccessModifier
 import free.core.parser.node.TypeReferenceParser
 
-suspend fun parseClassParameters(
+context(_: FreeContext)
+fun parseClassParameters(
 	ctx: FreeParserContext,
 	classAccess: Modifier
 ): List<Parameter> {
@@ -29,7 +31,8 @@ private class ClassParameterParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(classAccess: Modifier): Parameter {
+	context(_: FreeContext)
+	fun parse(classAccess: Modifier): Parameter {
 		val modifiers = mutableSetOf<Modifier>()
 		var parameterAccess = getClassParameterAccessModifier(ctx, classAccess) {
 			"主构造参数访问修饰符与类访问修饰符不兼容"

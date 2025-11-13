@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -20,7 +21,8 @@ class StructDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(modifiers: Set<Modifier>): StructDeclaration {
+	context(_: FreeContext)
+	fun parse(modifiers: Set<Modifier>): StructDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "结构体缺少名称")
 		val name = ctx.previous.value
 		val structAccess = modifiers.access

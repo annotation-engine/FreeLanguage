@@ -1,5 +1,6 @@
 package free.core.parser.matcher
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -19,7 +20,8 @@ sealed interface StatementMatcher<S : Statement> {
 		return false
 	}
 	
-	suspend fun parse(ctx: FreeParserContext): S
+	context(_: FreeContext)
+	fun parse(ctx: FreeParserContext): S
 	
 	companion object {
 		
@@ -27,7 +29,8 @@ sealed interface StatementMatcher<S : Statement> {
 			VariableDeclarationStatementMatcher
 		)
 		
-		suspend fun parse(ctx: FreeParserContext): Statement {
+		context(_: FreeContext)
+		fun parse(ctx: FreeParserContext): Statement {
 			matchers.forEach {
 				if (it.match(ctx)) return it.parse(ctx)
 			}
@@ -40,7 +43,8 @@ private object VariableDeclarationStatementMatcher : StatementMatcher<VariableDe
 	
 	override val tokenTypes = listOf(FreeTokenType.VAR, FreeTokenType.VAL)
 	
-	override suspend fun parse(ctx: FreeParserContext): VariableDeclarationStatement {
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext): VariableDeclarationStatement {
 		return VariableDeclarationStatementParser(ctx).parse()
 	}
 }

@@ -9,7 +9,6 @@ import free.core.parser.declaration.ImportDeclarationParser
 import free.core.parser.declaration.PackageDeclarationParser
 import free.core.parser.matcher.TopLevelDeclarationMatcher
 import free.core.parser.node.SourceFileNode
-import kotlinx.coroutines.currentCoroutineContext
 
 class FreeParser(
 	rawTokens: List<FreeToken>
@@ -17,8 +16,8 @@ class FreeParser(
 	
 	private val ctx = FreeParserContext(rawTokens)
 	
-	suspend fun parse(): SourceFileNode {
-		val sourcePath = currentCoroutineContext()[FreeContext]!!.sourcePath
+	context(context: FreeContext)
+	fun parse(): SourceFileNode {
 		val packageDeclaration = PackageDeclarationParser(ctx).parse()
 		val importDeclarations = mutableListOf<ImportDeclaration>()
 		while (ctx.match(FreeTokenType.IMPORT)) {
@@ -29,14 +28,15 @@ class FreeParser(
 			declarations += parseDeclaration()
 		}
 		return SourceFileNode(
-			path = sourcePath,
+			path = context.sourcePath,
 			packageDeclaration = packageDeclaration,
 			importDeclarations = importDeclarations,
 			declarations = declarations,
 		)
 	}
 	
-	private suspend fun parseDeclaration(): Declaration {
+	context(_: FreeContext)
+	private fun parseDeclaration(): Declaration {
 		val modifiers = mutableSetOf<Modifier>()
 		modifiers += getTopLevelAccessModifier(ctx)
 		modifiers += getDeclarationModifiers(ctx)

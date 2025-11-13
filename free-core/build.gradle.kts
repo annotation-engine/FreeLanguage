@@ -21,5 +21,8 @@ kotlin {
 				implementation(libs.bundles.free.core)
 			}
 		}
+		all {
+			languageSettings.enableLanguageFeature("ContextParameters")
+		}
 	}
 }

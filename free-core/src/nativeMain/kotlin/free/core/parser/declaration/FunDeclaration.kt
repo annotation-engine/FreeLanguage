@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.constants.FreeTypes
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -25,7 +26,8 @@ class FunDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(modifiers: Set<Modifier>): FunDeclaration {
+	context(_: FreeContext)
+	fun parse(modifiers: Set<Modifier>): FunDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "函数缺少名称")
 		val funName = ctx.previous.value
 		val parameters = parseFunParameters(ctx)

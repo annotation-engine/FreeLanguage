@@ -1,7 +1,6 @@
 package free.core.lexer
 
 import free.core.FreeContext
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,13 +17,12 @@ data class FreeToken(
 		get() = this.end - this.start
 }
 
-suspend fun List<FreeToken>.formatToString(): String {
-	val sourcePath = currentCoroutineContext()[FreeContext]!!.sourcePath
-	val lineColumns = this.map { "$sourcePath:${it.line}:${it.column}" }
+context(context: FreeContext)
+fun List<FreeToken>.formatToString(): String {
+	val lineColumns = this.map { "${context.sourcePath}:${it.line}:${it.column}" }
 	val max = lineColumns.maxOf { it.length }
-	val tokens = this
 	return buildString {
-		tokens.forEachIndexed { index, token ->
+		this@formatToString.forEachIndexed { index, token ->
 			val lineColumn = lineColumns[index]
 			append(lineColumn)
 			append(" ".repeat(max - lineColumn.length + 2))

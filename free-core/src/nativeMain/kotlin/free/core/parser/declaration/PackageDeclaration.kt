@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -15,7 +16,8 @@ class PackageDeclarationParser(
 	private val ctx: FreeParserContext,
 ) {
 	
-	suspend fun parse(): PackageDeclaration {
+	context(_: FreeContext)
+	fun parse(): PackageDeclaration {
 		if (ctx.match(FreeTokenType.PACKAGE)) {
 			val packages = mutableListOf<String>()
 			ctx.expect(FreeTokenType.IDENTIFIER, "package 后应跟包名")

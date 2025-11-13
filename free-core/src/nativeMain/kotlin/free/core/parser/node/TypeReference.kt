@@ -1,5 +1,6 @@
 package free.core.parser.node
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -32,7 +33,8 @@ class TypeReferenceParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(isSupportedLambda: Boolean = true): TypeReference {
+	context(_: FreeContext)
+	fun parse(isSupportedLambda: Boolean = true): TypeReference {
 		return if (ctx.match(FreeTokenType.LPAREN)) {
 			parseLambdaType(isSupportedLambda)
 		} else {
@@ -40,7 +42,8 @@ class TypeReferenceParser(
 		}
 	}
 	
-	private suspend fun parseLambdaType(
+	context(_: FreeContext)
+	private fun parseLambdaType(
 		isSupportedLambda: Boolean
 	): TypeReference {
 		val parameters = parseLambdaParameters(ctx)
@@ -114,7 +117,8 @@ class TypeReferenceParser(
 		}
 	}
 	
-	private suspend fun parseNamedType(): TypeReference {
+	context(_: FreeContext)
+	private fun parseNamedType(): TypeReference {
 		val type = mutableListOf<String>()
 		do {
 			ctx.expect(FreeTokenType.IDENTIFIER, "无法识别标识符")

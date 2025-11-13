@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import kotlinx.serialization.Serializable
@@ -21,7 +22,8 @@ class ImportDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(): ImportDeclaration {
+	context(_: FreeContext)
+	fun parse(): ImportDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "import 缺少包名")
 		val paths = mutableListOf(ctx.previous.value)
 		var scope = ImportScope.SINGLE

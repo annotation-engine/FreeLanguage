@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -21,7 +22,8 @@ class InterfaceDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(modifiers: Set<Modifier>): InterfaceDeclaration {
+	context(_: FreeContext)
+	fun parse(modifiers: Set<Modifier>): InterfaceDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "接口缺少名称")
 		val name = ctx.previous.value
 		if (!ctx.match(FreeTokenType.LBRACE)) {
@@ -42,7 +44,8 @@ class InterfaceDeclarationParser(
 		)
 	}
 	
-	private suspend fun parseMemberDeclaration(
+	context(_: FreeContext)
+	private fun parseMemberDeclaration(
 		interfaceAccess: Modifier
 	): Declaration {
 		val memberAccess = when {

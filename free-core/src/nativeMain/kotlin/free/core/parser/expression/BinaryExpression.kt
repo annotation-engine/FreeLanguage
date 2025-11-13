@@ -1,5 +1,6 @@
 package free.core.parser.expression
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.parser.FreeParserContext
 import free.core.parser.matcher.ExpressionMatcher
@@ -16,7 +17,8 @@ class BinaryExpressionParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(left: Expression): BinaryExpression {
+	context(_: FreeContext)
+	fun parse(left: Expression): BinaryExpression {
 		val previous = ctx.previous
 		val operator = previous.type.toOperator()
 		val right = ExpressionMatcher.parse(ctx)

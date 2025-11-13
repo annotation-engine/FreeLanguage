@@ -1,5 +1,6 @@
 package free.core.parser.matcher
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -11,7 +12,8 @@ sealed interface TopLevelDeclarationMatcher<out D : Declaration> {
 	
 	val tokenType: FreeTokenType
 	
-	suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): D
+	context(_: FreeContext)
+	fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): D
 	
 	companion object {
 		
@@ -25,7 +27,8 @@ sealed interface TopLevelDeclarationMatcher<out D : Declaration> {
 			TopLevelAnnotationDeclarationMatcher
 		)
 		
-		suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): Declaration {
+		context(_: FreeContext)
+		fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): Declaration {
 			matchers.forEach {
 				if (ctx.match(it.tokenType)) {
 					return it.checkAndParse(ctx, modifiers)
@@ -40,7 +43,8 @@ private object TopLevelFunDeclarationMatcher : TopLevelDeclarationMatcher<FunDec
 	
 	override val tokenType = FreeTokenType.FUN
 	
-	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): FunDeclaration {
+	context(_: FreeContext)
+	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): FunDeclaration {
 		checkSupportedDeclarationModifiers(
 			ctx, modifiers, "顶层函数",
 			isSupportedConst = true
@@ -53,7 +57,8 @@ private object TopLevelClassDeclarationMatcher : TopLevelDeclarationMatcher<Clas
 	
 	override val tokenType = FreeTokenType.CLASS
 	
-	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): ClassDeclaration {
+	context(_: FreeContext)
+	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): ClassDeclaration {
 		checkSupportedDeclarationModifiers(
 			ctx, modifiers, "顶层类",
 			isSupportedOpen = true,
@@ -67,7 +72,8 @@ private object TopLevelSingleDeclarationMatcher : TopLevelDeclarationMatcher<Sin
 	
 	override val tokenType = FreeTokenType.SINGLE
 	
-	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): SingleDeclaration {
+	context(_: FreeContext)
+	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): SingleDeclaration {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层单例类")
 		return SingleDeclarationParser(ctx).parse(modifiers)
 	}
@@ -77,7 +83,8 @@ private object TopLevelInterfaceDeclarationMatcher : TopLevelDeclarationMatcher<
 	
 	override val tokenType = FreeTokenType.INTERFACE
 	
-	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): InterfaceDeclaration {
+	context(_: FreeContext)
+	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): InterfaceDeclaration {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层接口")
 		return InterfaceDeclarationParser(ctx).parse(modifiers)
 	}
@@ -87,7 +94,8 @@ private object TopLevelStructDeclarationMatcher : TopLevelDeclarationMatcher<Str
 	
 	override val tokenType = FreeTokenType.STRUCT
 	
-	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): StructDeclaration {
+	context(_: FreeContext)
+	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): StructDeclaration {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层结构体")
 		return StructDeclarationParser(ctx).parse(modifiers)
 	}
@@ -97,7 +105,8 @@ private object TopLevelEnumDeclarationMatcher : TopLevelDeclarationMatcher<EnumD
 	
 	override val tokenType = FreeTokenType.ENUM
 	
-	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): EnumDeclaration {
+	context(_: FreeContext)
+	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): EnumDeclaration {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层枚举")
 		return EnumDeclarationParser(ctx).parse(modifiers)
 	}
@@ -107,7 +116,8 @@ private object TopLevelAnnotationDeclarationMatcher : TopLevelDeclarationMatcher
 	
 	override val tokenType = FreeTokenType.ANNOTATION
 	
-	override suspend fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): AnnotationDeclaration {
+	context(_: FreeContext)
+	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): AnnotationDeclaration {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层注解")
 		return AnnotationDeclarationParser(ctx).parse(modifiers)
 	}

@@ -1,5 +1,6 @@
 package free.core.parser.matcher
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.*
@@ -9,7 +10,8 @@ sealed interface MemberDeclarationMatcher<out D : Declaration> {
 	
 	val tokenType: FreeTokenType
 	
-	suspend fun checkAndParse(
+	context(_: FreeContext)
+	fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
@@ -28,7 +30,8 @@ sealed interface MemberDeclarationMatcher<out D : Declaration> {
 			MemberAnnotationDeclarationMatcher
 		)
 		
-		suspend fun checkAndParse(
+		context(_: FreeContext)
+		fun checkAndParse(
 			ctx: FreeParserContext,
 			typeKind: TypeKind,
 			parentModifiers: Set<Modifier>,
@@ -48,7 +51,8 @@ private object MemberFunDeclarationMatcher : MemberDeclarationMatcher<FunDeclara
 	
 	override val tokenType = FreeTokenType.FUN
 	
-	override suspend fun checkAndParse(
+	context(_: FreeContext)
+	override fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
@@ -82,7 +86,8 @@ private object MemberClassDeclarationMatcher : MemberDeclarationMatcher<ClassDec
 	
 	override val tokenType = FreeTokenType.CLASS
 	
-	override suspend fun checkAndParse(
+	context(_: FreeContext)
+	override fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
@@ -101,7 +106,8 @@ private object MemberSingleDeclarationMatcher : MemberDeclarationMatcher<SingleD
 	
 	override val tokenType = FreeTokenType.SINGLE
 	
-	override suspend fun checkAndParse(
+	context(_: FreeContext)
+	override fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
@@ -118,7 +124,8 @@ private object MemberInterfaceDeclarationMatcher : MemberDeclarationMatcher<Inte
 	
 	override val tokenType = FreeTokenType.INTERFACE
 	
-	override suspend fun checkAndParse(
+	context(_: FreeContext)
+	override fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
@@ -135,7 +142,8 @@ private object MemberStructDeclarationMatcher : MemberDeclarationMatcher<StructD
 	
 	override val tokenType = FreeTokenType.STRUCT
 	
-	override suspend fun checkAndParse(
+	context(_: FreeContext)
+	override fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
@@ -152,7 +160,8 @@ private object MemberEnumDeclarationMatcher : MemberDeclarationMatcher<EnumDecla
 	
 	override val tokenType = FreeTokenType.ENUM
 	
-	override suspend fun checkAndParse(
+	context(_: FreeContext)
+	override fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,
@@ -169,7 +178,8 @@ private object MemberAnnotationDeclarationMatcher : MemberDeclarationMatcher<Ann
 	
 	override val tokenType = FreeTokenType.ANNOTATION
 	
-	override suspend fun checkAndParse(
+	context(_: FreeContext)
+	override fun checkAndParse(
 		ctx: FreeParserContext,
 		typeKind: TypeKind,
 		parentModifiers: Set<Modifier>,

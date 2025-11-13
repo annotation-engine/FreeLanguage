@@ -1,11 +1,13 @@
 package free.core.parser.parameter
 
+import free.core.FreeContext
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import free.core.parser.Modifier
 import free.core.parser.node.TypeReferenceParser
 
-suspend fun parseFunParameters(ctx: FreeParserContext): List<Parameter> {
+context(_: FreeContext)
+fun parseFunParameters(ctx: FreeParserContext): List<Parameter> {
 	ctx.expect(FreeTokenType.LPAREN, "函数缺少 '('")
 	if (ctx.match(FreeTokenType.RPAREN)) {
 		return emptyList()
@@ -24,7 +26,8 @@ private class FunParameterParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(): Parameter {
+	context(_: FreeContext)
+	fun parse(): Parameter {
 		val modifiers = mutableSetOf<Modifier>()
 		modifiers += if (ctx.match(FreeTokenType.VAR)) Modifier.VAR else Modifier.VAL
 		ctx.expect(FreeTokenType.IDENTIFIER, "参数缺少名称")

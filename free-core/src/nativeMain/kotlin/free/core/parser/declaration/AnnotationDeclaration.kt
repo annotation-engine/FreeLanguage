@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -20,7 +21,8 @@ class AnnotationDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(modifiers: Set<Modifier>): AnnotationDeclaration {
+	context(_: FreeContext)
+	fun parse(modifiers: Set<Modifier>): AnnotationDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "注解缺少名称")
 		val annotationAccess = modifiers.access
 		val name = ctx.previous.value

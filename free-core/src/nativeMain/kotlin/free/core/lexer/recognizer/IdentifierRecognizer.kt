@@ -1,12 +1,14 @@
 package free.core.lexer.recognizer
 
 import free.core.exception.syntaxError
+import free.core.FreeContext
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
 
 data object IdentifierRecognizer : TokenRecognizer {
 	
-	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
+	context(_: FreeContext)
+	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
 		val char = input[start]
 		if (!char.isEnglishLetter() && char != '_') return null
 		var position = start + 1

@@ -1,5 +1,6 @@
 package free.core.parser.matcher
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType.*
 import free.core.parser.FreeParserContext
@@ -9,7 +10,8 @@ sealed interface ExpressionMatcher<out E : Expression> {
 	
 	fun match(ctx: FreeParserContext, left: Expression?): Boolean
 	
-	suspend fun parse(ctx: FreeParserContext, left: Expression?): E
+	context(_: FreeContext)
+	fun parse(ctx: FreeParserContext, left: Expression?): E
 	
 	companion object {
 		
@@ -21,7 +23,8 @@ sealed interface ExpressionMatcher<out E : Expression> {
 			PrimaryExpressionMatcher,
 		)
 		
-		suspend fun parse(ctx: FreeParserContext, left: Expression? = null): Expression {
+		context(_: FreeContext)
+		fun parse(ctx: FreeParserContext, left: Expression? = null): Expression {
 			matchers.forEach {
 				if (it.match(ctx, left)) {
 					return it.parse(ctx, left)
@@ -38,7 +41,8 @@ private object GroupingExpressionMatcher : ExpressionMatcher<GroupingExpression>
 		return ctx.match(LPAREN)
 	}
 	
-	override suspend fun parse(ctx: FreeParserContext, left: Expression?): GroupingExpression {
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, left: Expression?): GroupingExpression {
 		var expression: Expression? = null
 		do {
 			expression = ExpressionMatcher.parse(ctx, expression)
@@ -63,7 +67,8 @@ private object PrefixUnaryExpressionMatcher : ExpressionMatcher<PrefixUnaryExpre
 		return false
 	}
 	
-	override suspend fun parse(ctx: FreeParserContext, left: Expression?): PrefixUnaryExpression {
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, left: Expression?): PrefixUnaryExpression {
 		return PrefixUnaryExpressionParser(ctx).parse()
 	}
 }
@@ -80,7 +85,8 @@ private object SuffixUnaryExpressionMatcher : ExpressionMatcher<SuffixUnaryExpre
 		return false
 	}
 	
-	override suspend fun parse(ctx: FreeParserContext, left: Expression?): SuffixUnaryExpression {
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, left: Expression?): SuffixUnaryExpression {
 		return SuffixUnaryExpressionParser(ctx).parse()
 	}
 }
@@ -104,7 +110,8 @@ private object BinaryExpressionMatcher : ExpressionMatcher<BinaryExpression> {
 		return false
 	}
 	
-	override suspend fun parse(ctx: FreeParserContext, left: Expression?): BinaryExpression {
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, left: Expression?): BinaryExpression {
 		if (left == null) {
 			syntaxError("二元运算符未解析到左值", ctx.peek(offset = -2)!!)
 		}
@@ -123,7 +130,8 @@ private object PrimaryExpressionMatcher : ExpressionMatcher<Expression> {
 		return false
 	}
 	
-	override suspend fun parse(ctx: FreeParserContext, left: Expression?): Expression {
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, left: Expression?): Expression {
 		return PrimaryExpressionParser(ctx).parse()
 	}
 }

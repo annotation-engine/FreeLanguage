@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.*
@@ -28,7 +29,8 @@ class EnumDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(modifiers: Set<Modifier>): EnumDeclaration {
+	context(_: FreeContext)
+	fun parse(modifiers: Set<Modifier>): EnumDeclaration {
 		ctx.expect(FreeTokenType.IDENTIFIER, "枚举缺少名称")
 		val name = ctx.previous.value
 		val enumAccess = modifiers.access
@@ -58,7 +60,8 @@ class EnumDeclarationParser(
 		)
 	}
 	
-	private suspend fun parseEnumEntries(enumAccess: Modifier): List<EnumEntry> {
+	context(_: FreeContext)
+	private fun parseEnumEntries(enumAccess: Modifier): List<EnumEntry> {
 		val entries = mutableListOf<EnumEntry>()
 		while (!ctx.match(FreeTokenType.SEMICOLON) && !ctx.match(FreeTokenType.RBRACE)) {
 			entries += EnumEntryParser(ctx).parse(enumAccess)
@@ -72,7 +75,8 @@ class EnumDeclarationParser(
 		return entries
 	}
 	
-	private suspend fun parseMemberDeclaration(enumAccess: Modifier, enumModifiers: Set<Modifier>): Declaration {
+	context(_: FreeContext)
+	private fun parseMemberDeclaration(enumAccess: Modifier, enumModifiers: Set<Modifier>): Declaration {
 		val memberModifiers = mutableSetOf<Modifier>()
 		memberModifiers += getMemberAccessModifier(ctx, enumAccess) {
 			"访问修饰符与枚举访问修饰符不兼容"
@@ -91,7 +95,8 @@ private class EnumEntryParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(enumAccess: Modifier): EnumEntry {
+	context(_: FreeContext)
+	fun parse(enumAccess: Modifier): EnumEntry {
 		ctx.expect(FreeTokenType.IDENTIFIER, "枚举常量缺少名称")
 		val name = ctx.previous.value
 		if (ctx.match(FreeTokenType.LPAREN)) {
@@ -111,7 +116,8 @@ private class EnumEntryParser(
 		)
 	}
 	
-	private suspend fun parseMemberDeclaration(enumAccess: Modifier): Declaration {
+	context(_: FreeContext)
+	private fun parseMemberDeclaration(enumAccess: Modifier): Declaration {
 		val memberModifiers = mutableSetOf<Modifier>()
 		memberModifiers += getMemberAccessModifier(ctx, enumAccess) {
 			"访问修饰符与枚举访问修饰符不兼容"

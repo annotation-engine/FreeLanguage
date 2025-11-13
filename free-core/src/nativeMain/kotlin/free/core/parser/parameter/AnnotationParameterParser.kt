@@ -1,5 +1,6 @@
 package free.core.parser.parameter
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
@@ -7,7 +8,8 @@ import free.core.parser.Modifier
 import free.core.parser.getDefaultMemberAccessModifier
 import free.core.parser.node.TypeReferenceParser
 
-suspend fun parseAnnotationParameters(
+context(_: FreeContext)
+fun parseAnnotationParameters(
 	ctx: FreeParserContext,
 	annotationAccess: Modifier
 ): List<Parameter> {
@@ -28,7 +30,8 @@ class AnnotationParameterParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(annotationAccess: Modifier): Parameter {
+	context(_: FreeContext)
+	fun parse(annotationAccess: Modifier): Parameter {
 		val modifiers = mutableSetOf<Modifier>()
 		modifiers += getDefaultMemberAccessModifier(annotationAccess)
 		modifiers += when {

@@ -1,6 +1,7 @@
 package free.core.lexer.recognizer
 
 import free.core.exception.syntaxError
+import free.core.FreeContext
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
 import free.core.util.isBinary
@@ -12,7 +13,8 @@ data object NumberRecognizer : TokenRecognizer {
 	
 	private val legalEndChars = " +-*/%=><!&|^~,;:)]}\n\t".toSet()
 	
-	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
+	context(_: FreeContext)
+	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
 		if (!input[start].isDecimal()) return null
 		val numberSystem = if (input[start] == '0' && start + 1 < input.size) {
 			val symbol = input[start + 1]
@@ -90,7 +92,8 @@ data object NumberRecognizer : TokenRecognizer {
 		return FreeToken(FreeTokenType.NUMBER, input.concatToString(start, position), start, position, line, column)
 	}
 	
-	private suspend fun incorrectDigitalFormat(line: Int, column: Int): Nothing {
+	context(_: FreeContext)
+	private fun incorrectDigitalFormat(line: Int, column: Int): Nothing {
 		syntaxError("数字格式错误", line, column)
 	}
 }

@@ -1,5 +1,6 @@
 package free.core.parser.expression
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType.*
 import free.core.parser.FreeParserContext
@@ -8,7 +9,8 @@ class PrimaryExpressionParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(): Expression {
+	context(_: FreeContext)
+	fun parse(): Expression {
 		val token = ctx.previous
 		return when (token.type) {
 			NUMBER -> NumberLiteral(token.value)

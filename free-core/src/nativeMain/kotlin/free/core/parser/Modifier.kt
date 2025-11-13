@@ -1,5 +1,6 @@
 package free.core.parser
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.Modifier.*
@@ -27,7 +28,8 @@ val Set<Modifier>.isOpen: Boolean
 val Set<Modifier>.isAbstract: Boolean
 	get() = ABSTRACT in this
 
-suspend fun getTopLevelAccessModifier(ctx: FreeParserContext): Modifier {
+context(_: FreeContext)
+fun getTopLevelAccessModifier(ctx: FreeParserContext): Modifier {
 	return when {
 		ctx.match(FreeTokenType.PRIVATE) -> PRIVATE
 		ctx.match(FreeTokenType.FILE) -> syntaxError("顶层声明不支持 'file' 修饰符", ctx.previous)
@@ -38,7 +40,8 @@ suspend fun getTopLevelAccessModifier(ctx: FreeParserContext): Modifier {
 	}
 }
 
-suspend fun getMemberAccessModifier(ctx: FreeParserContext, parentAccess: Modifier, errorMessage: () -> String): Modifier {
+context(_: FreeContext)
+fun getMemberAccessModifier(ctx: FreeParserContext, parentAccess: Modifier, errorMessage: () -> String): Modifier {
 	val memberAccess = when {
 		ctx.match(FreeTokenType.PRIVATE) -> PRIVATE
 		ctx.match(FreeTokenType.FILE) -> FILE
@@ -67,7 +70,8 @@ fun getDefaultMemberAccessModifier(parentAccess: Modifier): Modifier {
 	}
 }
 
-suspend fun getClassParameterAccessModifier(ctx: FreeParserContext, classAccess: Modifier, errorMessage: () -> String): Modifier? {
+context(_: FreeContext)
+fun getClassParameterAccessModifier(ctx: FreeParserContext, classAccess: Modifier, errorMessage: () -> String): Modifier? {
 	val access = when {
 		ctx.match(FreeTokenType.PRIVATE) -> PRIVATE
 		ctx.match(FreeTokenType.FILE) -> FILE
@@ -97,7 +101,8 @@ fun getDeclarationModifiers(ctx: FreeParserContext): Set<Modifier> {
 	return modifiers
 }
 
-suspend fun checkSupportedDeclarationModifiers(
+context(_: FreeContext)
+fun checkSupportedDeclarationModifiers(
 	ctx: FreeParserContext,
 	modifiers: Set<Modifier>,
 	name: String,

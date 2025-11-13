@@ -1,5 +1,6 @@
 package free.core.parser
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
@@ -50,7 +51,8 @@ class FreeParserContext(
 		return !isAtEnd() && current.type == type
 	}
 	
-	suspend fun expect(type: FreeTokenType, errorMessage: String) {
+	context(_: FreeContext)
+	fun expect(type: FreeTokenType, errorMessage: String) {
 		if (check(type)) {
 			advance()
 			return

@@ -1,6 +1,7 @@
 package free.core.lexer.recognizer
 
 import free.core.exception.syntaxError
+import free.core.FreeContext
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
 import free.core.util.EscapeType
@@ -8,7 +9,8 @@ import free.core.util.isHex
 
 data object StringRecognizer : TokenRecognizer {
 	
-	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
+	context(_: FreeContext)
+	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
 		if (input[start] != '"') return null
 		val sb = StringBuilder()
 		var position = start + 1

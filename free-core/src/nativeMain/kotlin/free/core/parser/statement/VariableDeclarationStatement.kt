@@ -1,5 +1,6 @@
 package free.core.parser.statement
 
+import free.core.FreeContext
 import free.core.lexer.FreeTokenType.*
 import free.core.parser.FreeParserContext
 import free.core.parser.expression.Expression
@@ -20,7 +21,8 @@ class VariableDeclarationStatementParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(): VariableDeclarationStatement {
+	context(_: FreeContext)
+	fun parse(): VariableDeclarationStatement {
 		val isVariable = ctx.previous.type == VAR
 		ctx.expect(IDENTIFIER, "变量缺少名称")
 		val name = ctx.previous.value

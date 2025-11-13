@@ -1,5 +1,6 @@
 package free.core.parser.expression
 
+import free.core.FreeContext
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import kotlinx.serialization.Serializable
@@ -14,7 +15,8 @@ class SuffixUnaryExpressionParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(): SuffixUnaryExpression {
+	context(_: FreeContext)
+	fun parse(): SuffixUnaryExpression {
 		ctx.expect(FreeTokenType.IDENTIFIER, "一元运算符前必须跟标识符")
 		val expression = IdentifierExpression(ctx.previous.value)
 		ctx.advance()

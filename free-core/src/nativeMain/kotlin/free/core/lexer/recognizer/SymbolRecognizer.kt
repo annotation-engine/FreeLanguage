@@ -1,5 +1,6 @@
 package free.core.lexer.recognizer
 
+import free.core.FreeContext
 import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
 
@@ -70,7 +71,8 @@ data object SymbolRecognizer : TokenRecognizer {
 	
 	private val maxLength = tokenTypeMap.keys.maxOf { it }
 	
-	override suspend fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
+	context(_: FreeContext)
+	override fun tryParse(input: CharArray, start: Int, line: Int, column: Int): FreeToken? {
 		if (input[start].toString() !in tokenTypeMap[1]!!) return null
 		for (length in maxLength downTo 1) {
 			if (start + length > input.size) continue

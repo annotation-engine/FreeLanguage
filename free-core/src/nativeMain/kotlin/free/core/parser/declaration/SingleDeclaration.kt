@@ -1,5 +1,6 @@
 package free.core.parser.declaration
 
+import free.core.FreeContext
 import free.core.lexer.FreeTokenType
 import free.core.parser.*
 import free.core.parser.matcher.MemberDeclarationMatcher
@@ -17,7 +18,8 @@ class SingleDeclarationParser(
 	private val ctx: FreeParserContext
 ) {
 	
-	suspend fun parse(modifiers: Set<Modifier>, typeKind: TypeKind? = null): SingleDeclaration {
+	context(_: FreeContext)
+	fun parse(modifiers: Set<Modifier>, typeKind: TypeKind? = null): SingleDeclaration {
 		val name = when {
 			typeKind == null -> {
 				ctx.expect(FreeTokenType.IDENTIFIER, "单例类缺少名称")
@@ -52,7 +54,8 @@ class SingleDeclarationParser(
 		)
 	}
 	
-	private suspend fun parseMemberDeclaration(
+	context(_: FreeContext)
+	private fun parseMemberDeclaration(
 		singleAccess: Modifier,
 		singleModifiers: Set<Modifier>,
 	): Declaration {

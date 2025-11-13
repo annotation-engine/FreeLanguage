@@ -1,11 +1,12 @@
 package free.core.lexer
 
+import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.recognizer.*
 import free.core.util.TAB_LENGTH
 
 class FreeLexer(
-	private val input: CharArray,
+	private val input: CharArray
 ) {
 	
 	private var position = 0
@@ -26,7 +27,8 @@ class FreeLexer(
 		IdentifierRecognizer,
 	)
 	
-	suspend fun lex(): List<FreeToken> {
+	context(_: FreeContext)
+	fun lex(): List<FreeToken> {
 		return buildList {
 			while (true) {
 				val token = nextToken()
@@ -36,7 +38,8 @@ class FreeLexer(
 		}
 	}
 	
-	private suspend fun nextToken(): FreeToken {
+	context(_: FreeContext)
+	private fun nextToken(): FreeToken {
 		recognizers.forEach {
 			val token = it.tryParse(input, position, line, column) ?: return@forEach
 			position = token.end

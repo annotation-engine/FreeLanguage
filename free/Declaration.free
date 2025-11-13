@@ -1,11 +1,18 @@
 package free.example
 
 fun main() {
-
+    var n = 0
+    val n1 = ++n / n--
+    val n2 = n++ + 10
+    val n3 = n1 + n2 * 5 + 6**10
+    val n4 = 1 + (2 + 3) * 10
+    val result = (++a * b-- / c % d ** e - f)
+                 + (g << h >> i >>> j)
+                 + (x + y - z)
 }
 
 private const fun add(num1: Int, num2: Int?): Int {
-    return num1 + num2
+
 }
 
 private fun callback(callback: ((_: Int) -> [String, Int])?) {
@@ -17,11 +24,11 @@ private fun callback2(): Int, String {
 }
 
 private fun returns1(): ((fun1: () -> String[]) -> Unit)? {
-    return
+
 }
 
 private fun returns2(): (String, age: Int, _: String) -> [Int?, String[]?], String {
-    return
+
 }
 
 # ((String)) 与 String 等价
@@ -46,11 +53,11 @@ private class Hello(
 ) {
 
     file fun test(): Int, String?, free.example.Hello {
-        return 1, "Hello"
+
     }
 
     fun test2(): Double? {
-        return 10.0
+
     }
 }
 
@@ -103,13 +110,13 @@ enum Status(
     SUCCESS(code: 0, msg: "Success") {
 
         override fun isSuccess(): Boolean {
-            return true
+
         }
     },
     FAILURE(code: -1, msg: "Failure") {
 
         override fun isSuccess(): Boolean {
-            return false
+
         }
     };
 
