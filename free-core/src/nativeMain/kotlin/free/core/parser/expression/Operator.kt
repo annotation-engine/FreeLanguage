@@ -1,119 +1,177 @@
 package free.core.parser.expression
 
 import free.core.lexer.FreeTokenType
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 enum class Operator(
 	val priority: Int,
 	val associativity: Associativity
 ) {
+	@SerialName("++")
 	DOUBLE_PLUS(
 		priority = 12,
 		associativity = Associativity.RIGHT,
 	),
+	
+	@SerialName("--")
 	DOUBLE_MINUS(
 		priority = 12,
 		associativity = Associativity.RIGHT,
 	),
+	
+	@SerialName("!")
 	NOT(
 		priority = 11,
 		associativity = Associativity.RIGHT,
 	),
+	
+	@SerialName("~")
 	BIT_NOT(
 		priority = 11,
 		associativity = Associativity.RIGHT,
 	),
+	
+	@SerialName("**")
 	DOUBLE_STAR(
 		priority = 10,
 		associativity = Associativity.RIGHT,
 	),
+	
+	@SerialName("*")
 	STAR(
 		priority = 9,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("/")
 	SLASH(
 		priority = 9,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("%")
 	PERCENT(
 		priority = 9,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("+")
 	PLUS(
 		priority = 8,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("-")
 	MINUS(
 		priority = 8,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("<<")
 	SHL(
 		priority = 7,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName(">>")
 	SHR(
 		priority = 7,
 		associativity = Associativity.LEFT
 	),
+	
+	@SerialName(">>>")
 	USHR(
 		priority = 7,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("==")
 	EQUALS(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("!=")
 	NOT_EQUALS(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("===")
 	TRIPLE_EQUALS(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("!==")
 	TRIPLE_NOT_EQUALS(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName(">")
 	GT(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName(">=")
 	GT_EQUALS(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("<")
 	LT(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("<=")
 	LT_EQUALS(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("~>")
 	IN(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("!>")
 	NOT_IN(
 		priority = 6,
 		associativity = Associativity.NONE,
 	),
+	
+	@SerialName("&")
 	BIT_AND(
 		priority = 5,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("^")
 	BIT_XOR(
 		priority = 4,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("|")
 	BIT_OR(
 		priority = 3,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("&&")
 	AND(
 		priority = 2,
 		associativity = Associativity.LEFT,
 	),
+	
+	@SerialName("||")
 	OR(
 		priority = 1,
 		associativity = Associativity.LEFT,
