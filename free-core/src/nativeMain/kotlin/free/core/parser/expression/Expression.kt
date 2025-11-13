@@ -14,6 +14,14 @@ data class IdentifierExpression(
 ) : Expression
 
 /**
+ * 括号表达式
+ */
+@Serializable
+data class GroupingExpression(
+	val expression: Expression
+) : Expression
+
+/**
  * 属性访问
  */
 @Serializable
@@ -39,12 +47,4 @@ data class TernaryExpression(
 	val condition: Expression,
 	val thenExpression: Expression,
 	val elseExpression: Expression
-) : Expression
-
-/**
- * 括号表达式
- */
-@Serializable
-data class GroupingExpression(
-	val expression: Expression
 ) : Expression

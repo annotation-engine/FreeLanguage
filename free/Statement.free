@@ -8,4 +8,8 @@ fun main() {
     val n1 = ++n / n--
     val n2 = n++ + 10
     val n3 = n1 + n2 * 5 + 6**10
+    val n4 = 1 + (2 + 3) * 10
+    val result = (++a * b-- / c % d ** e - f)
+                 + (g << h >> i >>> j)
+                 + (x + y - z)
 }

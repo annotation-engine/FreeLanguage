@@ -14,6 +14,7 @@ sealed interface ExpressionMatcher<out E : Expression> {
 	companion object {
 		
 		private val matchers = listOf(
+			GroupingExpressionMatcher,
 			PrefixUnaryExpressionMatcher,
 			SuffixUnaryExpressionMatcher,
 			BinaryExpressionMatcher,
@@ -28,6 +29,21 @@ sealed interface ExpressionMatcher<out E : Expression> {
 			}
 			syntaxError("不支持的表达式", ctx.current)
 		}
+	}
+}
+
+private object GroupingExpressionMatcher : ExpressionMatcher<GroupingExpression> {
+	
+	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
+		return ctx.match(LPAREN)
+	}
+	
+	override suspend fun parse(ctx: FreeParserContext, left: Expression?): GroupingExpression {
+		var expression: Expression? = null
+		do {
+			expression = ExpressionMatcher.parse(ctx, expression)
+		} while (!ctx.match(RPAREN))
+		return GroupingExpression(expression)
 	}
 }
 
