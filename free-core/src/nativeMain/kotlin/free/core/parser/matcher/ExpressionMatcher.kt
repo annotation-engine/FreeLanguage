@@ -20,6 +20,7 @@ sealed interface ExpressionMatcher<out E : Expression> {
 			PrefixUnaryExpressionMatcher,
 			SuffixUnaryExpressionMatcher,
 			BinaryExpressionMatcher,
+			TernaryExpressionMatcher,
 			PrimaryExpressionMatcher,
 		)
 		
@@ -43,11 +44,7 @@ private object GroupingExpressionMatcher : ExpressionMatcher<GroupingExpression>
 	
 	context(_: FreeContext)
 	override fun parse(ctx: FreeParserContext, left: Expression?): GroupingExpression {
-		var expression: Expression? = null
-		do {
-			expression = ExpressionMatcher.parse(ctx, expression)
-		} while (!ctx.match(RPAREN))
-		return GroupingExpression(expression)
+		return GroupingExpressionParser(ctx).parse()
 	}
 }
 
@@ -103,9 +100,7 @@ private object BinaryExpressionMatcher : ExpressionMatcher<BinaryExpression> {
 	
 	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
 		tokenTypes.forEach {
-			if (ctx.match(it)) {
-				return true
-			}
+			if (ctx.match(it)) return true
 		}
 		return false
 	}
@@ -116,6 +111,21 @@ private object BinaryExpressionMatcher : ExpressionMatcher<BinaryExpression> {
 			syntaxError("二元运算符未解析到左值", ctx.peek(offset = -2)!!)
 		}
 		return BinaryExpressionParser(ctx).parse(left)
+	}
+}
+
+private object TernaryExpressionMatcher : ExpressionMatcher<TernaryExpression> {
+	
+	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
+		return ctx.match(QUESTION)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, left: Expression?): TernaryExpression {
+		if (left == null) {
+			syntaxError("三元运算符 '?' 前未解析到表达式", ctx.peek(offset = -2)!!)
+		}
+		return TernaryExpressionParser(ctx).parse(left)
 	}
 }
 

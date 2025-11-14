@@ -41,24 +41,4 @@ class VariableDeclarationStatementParser(
 			type = type
 		)
 	}
-	
-	private val nonEndTokens = listOf(
-		PLUS, MINUS, STAR, SLASH, PERCENT, DOUBLE_STAR,
-		EQUALS, NOT_EQUALS, GT, GT_EQUALS, LT, LT_EQUALS, TRIPLE_EQUALS,
-		IN, NOT_IN,
-		BIT_AND, BIT_OR, BIT_XOR,
-		SHL, SHR, USHR,
-		AND, OR
-	)
-	
-	private fun isStatementEnd(ctx: FreeParserContext): Boolean {
-		if (ctx.match(SEMICOLON)) return true
-		val previous = ctx.previous
-		val current = ctx.current
-		if (previous.line == current.line) return false
-		nonEndTokens.forEach {
-			if (current.type == it) return false
-		}
-		return true
-	}
 }

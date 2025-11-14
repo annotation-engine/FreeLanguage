@@ -34,6 +34,7 @@ enum class FreeTokenType {
 	FOR,                // for
 	WHILE,              // while
 	DO,                 // do
+	LOOP,               // loop
 	RETURN,             // return
 	BREAK,              // break
 	CONTINUE,           // continue

@@ -38,6 +38,7 @@ data object KeywordRecognizer : TokenRecognizer {
 		"for" to FreeTokenType.FOR,
 		"while" to FreeTokenType.WHILE,
 		"do" to FreeTokenType.DO,
+		"loop" to FreeTokenType.LOOP,
 		"return" to FreeTokenType.RETURN,
 		"break" to FreeTokenType.BREAK,
 		"continue" to FreeTokenType.CONTINUE,

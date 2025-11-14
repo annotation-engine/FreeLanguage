@@ -22,7 +22,9 @@ kotlin {
 			}
 		}
 		all {
-			languageSettings.enableLanguageFeature("ContextParameters")
+			languageSettings {
+				enableLanguageFeature("ContextParameters")
+			}
 		}
 	}
 }

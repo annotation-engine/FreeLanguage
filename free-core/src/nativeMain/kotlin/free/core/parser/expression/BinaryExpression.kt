@@ -2,8 +2,11 @@ package free.core.parser.expression
 
 import free.core.FreeContext
 import free.core.exception.syntaxError
+import free.core.parser.Associativity
 import free.core.parser.FreeParserContext
+import free.core.parser.Operator
 import free.core.parser.matcher.ExpressionMatcher
+import free.core.parser.toOperator
 import kotlinx.serialization.Serializable
 
 @Serializable

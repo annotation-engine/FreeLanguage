@@ -1,4 +1,4 @@
-package free.core.parser.expression
+package free.core.parser
 
 import free.core.lexer.FreeTokenType
 import kotlinx.serialization.SerialName
