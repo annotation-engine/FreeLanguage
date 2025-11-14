@@ -8,15 +8,13 @@ import free.core.parser.declaration.*
 
 sealed interface MemberDeclarationMatcher<out D : Declaration> {
 	
-	val tokenType: FreeTokenType
+	fun match(ctx: FreeParserContext): Boolean
 	
 	context(_: FreeContext)
-	fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): D
+	fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>)
+	
+	context(_: FreeContext)
+	fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): D
 	
 	companion object {
 		
@@ -31,15 +29,16 @@ sealed interface MemberDeclarationMatcher<out D : Declaration> {
 		)
 		
 		context(_: FreeContext)
-		fun checkAndParse(
+		fun parse(
 			ctx: FreeParserContext,
-			typeKind: TypeKind,
+			parentTypeKind: TypeKind,
 			parentModifiers: Set<Modifier>,
-			memberModifiers: Set<Modifier>
+			modifiers: Set<Modifier>
 		): Declaration {
-			matchers.forEach {
-				if (ctx.match(it.tokenType)) {
-					return it.checkAndParse(ctx, typeKind, parentModifiers, memberModifiers)
+			matchers.forEach { matcher ->
+				if (matcher.match(ctx)) {
+					matcher.check(ctx, parentTypeKind, parentModifiers, modifiers)
+					return matcher.parse(ctx, parentTypeKind, modifiers)
 				}
 			}
 			syntaxError("未知的成员声明", ctx.current)
@@ -49,146 +48,153 @@ sealed interface MemberDeclarationMatcher<out D : Declaration> {
 
 private object MemberFunDeclarationMatcher : MemberDeclarationMatcher<FunDeclaration> {
 	
-	override val tokenType = FreeTokenType.FUN
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.FUN)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): FunDeclaration {
-		when (typeKind) {
+	override fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>) {
+		when (parentTypeKind) {
 			TypeKind.ENUM -> checkSupportedDeclarationModifiers(
-				ctx, memberModifiers, name = "枚举成员函数",
+				ctx, modifiers, name = "枚举成员函数",
 				isSupportedOpen = true,
 				isSupportedAbstract = true,
 			)
 			
 			TypeKind.ENUM_ENTRY -> checkSupportedDeclarationModifiers(
-				ctx, memberModifiers, name = "枚举常量成员函数",
+				ctx, modifiers, name = "枚举常量成员函数",
 				isSupportedOverride = true
 			)
 			
 			else -> checkSupportedDeclarationModifiers(
-				ctx, memberModifiers, name = "成员函数",
+				ctx, modifiers, name = "成员函数",
 				isSupportedOpen = parentModifiers.isOpen,
 				isSupportedAbstract = parentModifiers.isAbstract,
 				isSupportedFinalOverride = parentModifiers.isAbstract,
 				isSupportedOverride = parentModifiers.isAbstract,
 			)
 		}
-		return FunDeclarationParser(ctx).parse(memberModifiers)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): FunDeclaration {
+		return FunDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object MemberClassDeclarationMatcher : MemberDeclarationMatcher<ClassDeclaration> {
 	
-	override val tokenType = FreeTokenType.CLASS
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.CLASS)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): ClassDeclaration {
+	override fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
-			ctx, memberModifiers, name = "内部类",
+			ctx, modifiers, name = "内部类",
 			isSupportedOpen = true,
 			isSupportedAbstract = true
 		)
-		return ClassDeclarationParser(ctx).parse(memberModifiers)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): ClassDeclaration {
+		return ClassDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object MemberSingleDeclarationMatcher : MemberDeclarationMatcher<SingleDeclaration> {
 	
-	override val tokenType = FreeTokenType.SINGLE
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.SINGLE)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): SingleDeclaration {
+	override fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
-			ctx, memberModifiers, name = "单例类"
+			ctx, modifiers, name = "单例类"
 		)
-		return SingleDeclarationParser(ctx).parse(memberModifiers, typeKind)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): SingleDeclaration {
+		return SingleDeclarationParser(ctx).parse(modifiers, parentTypeKind)
 	}
 }
 
 private object MemberInterfaceDeclarationMatcher : MemberDeclarationMatcher<InterfaceDeclaration> {
 	
-	override val tokenType = FreeTokenType.INTERFACE
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.INTERFACE)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): InterfaceDeclaration {
+	override fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
-			ctx, memberModifiers, name = "接口",
+			ctx, modifiers, name = "接口",
 		)
-		return InterfaceDeclarationParser(ctx).parse(memberModifiers)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): InterfaceDeclaration {
+		return InterfaceDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object MemberStructDeclarationMatcher : MemberDeclarationMatcher<StructDeclaration> {
 	
-	override val tokenType = FreeTokenType.STRUCT
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.STRUCT)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): StructDeclaration {
+	override fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
-			ctx, memberModifiers, name = "结构体",
+			ctx, modifiers, name = "结构体",
 		)
-		return StructDeclarationParser(ctx).parse(memberModifiers)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): StructDeclaration {
+		return StructDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object MemberEnumDeclarationMatcher : MemberDeclarationMatcher<EnumDeclaration> {
 	
-	override val tokenType = FreeTokenType.ENUM
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.ENUM)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): EnumDeclaration {
+	override fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
-			ctx, memberModifiers, name = "枚举",
+			ctx, modifiers, name = "枚举",
 		)
-		return EnumDeclarationParser(ctx).parse(memberModifiers)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): EnumDeclaration {
+		return EnumDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object MemberAnnotationDeclarationMatcher : MemberDeclarationMatcher<AnnotationDeclaration> {
 	
-	override val tokenType = FreeTokenType.ANNOTATION
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.ANNOTATION)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(
-		ctx: FreeParserContext,
-		typeKind: TypeKind,
-		parentModifiers: Set<Modifier>,
-		memberModifiers: Set<Modifier>
-	): AnnotationDeclaration {
+	override fun check(ctx: FreeParserContext, parentTypeKind: TypeKind, parentModifiers: Set<Modifier>, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
-			ctx, memberModifiers, name = "注解",
+			ctx, modifiers, name = "注解",
 		)
-		return AnnotationDeclarationParser(ctx).parse(memberModifiers)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, parentTypeKind: TypeKind, modifiers: Set<Modifier>): AnnotationDeclaration {
+		return AnnotationDeclarationParser(ctx).parse(modifiers)
 	}
 }
 

@@ -82,11 +82,11 @@ class EnumDeclarationParser(
 			"访问修饰符与枚举访问修饰符不兼容"
 		}
 		memberModifiers += getDeclarationModifiers(ctx)
-		return MemberDeclarationMatcher.checkAndParse(
+		return MemberDeclarationMatcher.parse(
 			ctx = ctx,
-			typeKind = TypeKind.ENUM,
+			parentTypeKind = TypeKind.ENUM,
 			parentModifiers = enumModifiers,
-			memberModifiers = memberModifiers
+			modifiers = memberModifiers
 		)
 	}
 }
@@ -123,11 +123,11 @@ private class EnumEntryParser(
 			"访问修饰符与枚举访问修饰符不兼容"
 		}
 		memberModifiers += getDeclarationModifiers(ctx)
-		return MemberDeclarationMatcher.checkAndParse(
+		return MemberDeclarationMatcher.parse(
 			ctx = ctx,
-			typeKind = TypeKind.ENUM_ENTRY,
+			parentTypeKind = TypeKind.ENUM_ENTRY,
 			parentModifiers = emptySet(),
-			memberModifiers = memberModifiers
+			modifiers = memberModifiers
 		)
 	}
 }

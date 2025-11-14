@@ -56,11 +56,11 @@ class InterfaceDeclarationParser(
 			ctx.match(FreeTokenType.PUBLIC) -> syntaxError("接口内部不允许使用 'public'", ctx.previous)
 			else -> getDefaultMemberAccessModifier(interfaceAccess)
 		}
-		return MemberDeclarationMatcher.checkAndParse(
+		return MemberDeclarationMatcher.parse(
 			ctx = ctx,
-			typeKind = TypeKind.INTERFACE,
+			parentTypeKind = TypeKind.INTERFACE,
 			parentModifiers = setOf(interfaceAccess),
-			memberModifiers = setOf(memberAccess)
+			modifiers = setOf(memberAccess)
 		)
 	}
 }

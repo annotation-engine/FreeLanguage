@@ -65,11 +65,11 @@ class ClassDeclarationParser(
 			"访问修饰符与类访问修饰符不兼容"
 		}
 		memberModifiers += getDeclarationModifiers(ctx)
-		return MemberDeclarationMatcher.checkAndParse(
+		return MemberDeclarationMatcher.parse(
 			ctx = ctx,
-			typeKind = TypeKind.CLASS,
+			parentTypeKind = TypeKind.CLASS,
 			parentModifiers = classModifiers,
-			memberModifiers = memberModifiers
+			modifiers = memberModifiers
 		)
 	}
 }

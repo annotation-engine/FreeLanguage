@@ -40,6 +40,6 @@ class FreeParser(
 		val modifiers = mutableSetOf<Modifier>()
 		modifiers += getTopLevelAccessModifier(ctx)
 		modifiers += getDeclarationModifiers(ctx)
-		return TopLevelDeclarationMatcher.checkAndParse(ctx, modifiers)
+		return TopLevelDeclarationMatcher.parse(ctx, modifiers)
 	}
 }

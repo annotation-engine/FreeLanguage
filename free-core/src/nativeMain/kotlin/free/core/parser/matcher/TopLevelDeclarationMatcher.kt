@@ -10,10 +10,13 @@ import free.core.parser.declaration.*
 
 sealed interface TopLevelDeclarationMatcher<out D : Declaration> {
 	
-	val tokenType: FreeTokenType
+	fun match(ctx: FreeParserContext): Boolean
 	
 	context(_: FreeContext)
-	fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): D
+	fun check(ctx: FreeParserContext, modifiers: Set<Modifier>)
+	
+	context(_: FreeContext)
+	fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): D
 	
 	companion object {
 		
@@ -28,10 +31,11 @@ sealed interface TopLevelDeclarationMatcher<out D : Declaration> {
 		)
 		
 		context(_: FreeContext)
-		fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): Declaration {
-			matchers.forEach {
-				if (ctx.match(it.tokenType)) {
-					return it.checkAndParse(ctx, modifiers)
+		fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): Declaration {
+			matchers.forEach { matcher ->
+				if (matcher.match(ctx)) {
+					matcher.check(ctx, modifiers)
+					return matcher.parse(ctx, modifiers)
 				}
 			}
 			syntaxError("未知的顶层声明", ctx.current)
@@ -41,84 +45,126 @@ sealed interface TopLevelDeclarationMatcher<out D : Declaration> {
 
 private object TopLevelFunDeclarationMatcher : TopLevelDeclarationMatcher<FunDeclaration> {
 	
-	override val tokenType = FreeTokenType.FUN
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.FUN)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): FunDeclaration {
+	override fun check(ctx: FreeParserContext, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
 			ctx, modifiers, "顶层函数",
 			isSupportedConst = true
 		)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): FunDeclaration {
 		return FunDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object TopLevelClassDeclarationMatcher : TopLevelDeclarationMatcher<ClassDeclaration> {
 	
-	override val tokenType = FreeTokenType.CLASS
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.CLASS)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): ClassDeclaration {
+	override fun check(ctx: FreeParserContext, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(
 			ctx, modifiers, "顶层类",
 			isSupportedOpen = true,
 			isSupportedAbstract = true
 		)
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): ClassDeclaration {
 		return ClassDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object TopLevelSingleDeclarationMatcher : TopLevelDeclarationMatcher<SingleDeclaration> {
 	
-	override val tokenType = FreeTokenType.SINGLE
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.SINGLE)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): SingleDeclaration {
+	override fun check(ctx: FreeParserContext, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层单例类")
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): SingleDeclaration {
 		return SingleDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object TopLevelInterfaceDeclarationMatcher : TopLevelDeclarationMatcher<InterfaceDeclaration> {
 	
-	override val tokenType = FreeTokenType.INTERFACE
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.INTERFACE)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): InterfaceDeclaration {
+	override fun check(ctx: FreeParserContext, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层接口")
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): InterfaceDeclaration {
 		return InterfaceDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object TopLevelStructDeclarationMatcher : TopLevelDeclarationMatcher<StructDeclaration> {
 	
-	override val tokenType = FreeTokenType.STRUCT
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.STRUCT)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): StructDeclaration {
+	override fun check(ctx: FreeParserContext, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层结构体")
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): StructDeclaration {
 		return StructDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object TopLevelEnumDeclarationMatcher : TopLevelDeclarationMatcher<EnumDeclaration> {
 	
-	override val tokenType = FreeTokenType.ENUM
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.ENUM)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): EnumDeclaration {
+	override fun check(ctx: FreeParserContext, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层枚举")
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): EnumDeclaration {
 		return EnumDeclarationParser(ctx).parse(modifiers)
 	}
 }
 
 private object TopLevelAnnotationDeclarationMatcher : TopLevelDeclarationMatcher<AnnotationDeclaration> {
 	
-	override val tokenType = FreeTokenType.ANNOTATION
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.ANNOTATION)
+	}
 	
 	context(_: FreeContext)
-	override fun checkAndParse(ctx: FreeParserContext, modifiers: Set<Modifier>): AnnotationDeclaration {
+	override fun check(ctx: FreeParserContext, modifiers: Set<Modifier>) {
 		checkSupportedDeclarationModifiers(ctx, modifiers, "顶层注解")
+	}
+	
+	context(_: FreeContext)
+	override fun parse(ctx: FreeParserContext, modifiers: Set<Modifier>): AnnotationDeclaration {
 		return AnnotationDeclarationParser(ctx).parse(modifiers)
 	}
 }

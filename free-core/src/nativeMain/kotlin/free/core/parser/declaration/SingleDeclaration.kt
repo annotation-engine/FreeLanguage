@@ -19,14 +19,14 @@ class SingleDeclarationParser(
 ) {
 	
 	context(_: FreeContext)
-	fun parse(modifiers: Set<Modifier>, typeKind: TypeKind? = null): SingleDeclaration {
+	fun parse(modifiers: Set<Modifier>, parentTypeKind: TypeKind? = null): SingleDeclaration {
 		val name = when {
-			typeKind == null -> {
+			parentTypeKind == null -> {
 				ctx.expect(FreeTokenType.IDENTIFIER, "单例类缺少名称")
 				ctx.previous.value
 			}
 			
-			typeKind == TypeKind.SINGLE -> {
+			parentTypeKind == TypeKind.SINGLE -> {
 				ctx.expect(FreeTokenType.IDENTIFIER, "内部单例类不支持默认名称")
 				ctx.previous.value
 			}
@@ -64,11 +64,11 @@ class SingleDeclarationParser(
 			"访问修饰符与类访问修饰符不兼容"
 		}
 		memberModifiers += getDeclarationModifiers(ctx)
-		return MemberDeclarationMatcher.checkAndParse(
+		return MemberDeclarationMatcher.parse(
 			ctx = ctx,
-			typeKind = TypeKind.SINGLE,
+			parentTypeKind = TypeKind.SINGLE,
 			parentModifiers = singleModifiers,
-			memberModifiers = memberModifiers
+			modifiers = memberModifiers
 		)
 	}
 }

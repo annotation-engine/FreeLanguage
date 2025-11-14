@@ -10,15 +10,7 @@ import free.core.parser.statement.VariableDeclarationStatementParser
 
 sealed interface StatementMatcher<S : Statement> {
 	
-	val tokenTypes: List<FreeTokenType>
-		get() = emptyList()
-	
-	fun match(ctx: FreeParserContext): Boolean {
-		tokenTypes.forEach {
-			if (ctx.match(it)) return true
-		}
-		return false
-	}
+	fun match(ctx: FreeParserContext): Boolean
 	
 	context(_: FreeContext)
 	fun parse(ctx: FreeParserContext): S
@@ -41,7 +33,9 @@ sealed interface StatementMatcher<S : Statement> {
 
 private object VariableDeclarationStatementMatcher : StatementMatcher<VariableDeclarationStatement> {
 	
-	override val tokenTypes = listOf(FreeTokenType.VAR, FreeTokenType.VAL)
+	override fun match(ctx: FreeParserContext): Boolean {
+		return ctx.match(FreeTokenType.VAR) || ctx.match(FreeTokenType.VAL)
+	}
 	
 	context(_: FreeContext)
 	override fun parse(ctx: FreeParserContext): VariableDeclarationStatement {

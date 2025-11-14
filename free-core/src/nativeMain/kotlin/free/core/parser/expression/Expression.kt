@@ -14,15 +14,6 @@ data class IdentifierExpression(
 ) : Expression
 
 /**
- * 属性访问
- */
-@Serializable
-data class PropertyAccessExpression(
-	val receiver: Expression?,
-	val name: String
-) : Expression
-
-/**
  * 函数调用
  */
 @Serializable
