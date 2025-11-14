@@ -5,9 +5,9 @@ import free.core.lexer.FreeToken
 import free.core.lexer.FreeTokenType
 import free.core.parser.declaration.Declaration
 import free.core.parser.declaration.ImportDeclaration
-import free.core.parser.declaration.ImportDeclarationParser
-import free.core.parser.declaration.PackageDeclarationParser
-import free.core.parser.matcher.TopLevelDeclarationMatcher
+import free.core.parser.declaration.matcher.toplevel.parseTopLevelDeclaration
+import free.core.parser.declaration.parser.ImportDeclarationParser
+import free.core.parser.declaration.parser.PackageDeclarationParser
 import free.core.parser.node.SourceFileNode
 
 class FreeParser(
@@ -40,6 +40,6 @@ class FreeParser(
 		val modifiers = mutableSetOf<Modifier>()
 		modifiers += getTopLevelAccessModifier(ctx)
 		modifiers += getDeclarationModifiers(ctx)
-		return TopLevelDeclarationMatcher.parse(ctx, modifiers)
+		return parseTopLevelDeclaration(ctx, modifiers)
 	}
 }

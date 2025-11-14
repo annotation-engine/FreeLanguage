@@ -5,7 +5,7 @@ import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import free.core.parser.parameter.Parameter
-import free.core.parser.parameter.parseLambdaParameters
+import free.core.parser.parameter.parser.parseLambdaParameters
 import kotlinx.serialization.Serializable
 
 @Serializable

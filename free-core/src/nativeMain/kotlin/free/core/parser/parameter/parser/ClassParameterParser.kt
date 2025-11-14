@@ -1,4 +1,4 @@
-package free.core.parser.parameter
+package free.core.parser.parameter.parser
 
 import free.core.FreeContext
 import free.core.exception.syntaxError
@@ -8,6 +8,7 @@ import free.core.parser.Modifier
 import free.core.parser.getClassParameterAccessModifier
 import free.core.parser.getDefaultMemberAccessModifier
 import free.core.parser.node.TypeReferenceParser
+import free.core.parser.parameter.Parameter
 
 context(_: FreeContext)
 fun parseClassParameters(

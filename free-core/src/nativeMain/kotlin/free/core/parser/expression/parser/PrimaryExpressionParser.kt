@@ -1,9 +1,10 @@
-package free.core.parser.expression
+package free.core.parser.expression.parser
 
 import free.core.FreeContext
 import free.core.exception.syntaxError
 import free.core.lexer.FreeTokenType.*
 import free.core.parser.FreeParserContext
+import free.core.parser.expression.*
 
 class PrimaryExpressionParser(
 	private val ctx: FreeParserContext
