@@ -19,4 +19,8 @@ fun main() {
         || false
     val third1 = true ? 1 : 0
     val third2 = true ? true ? 1 : 0 : true ? 1 : 0
+
+    val value1 = a.b + c.d?.e! - f!.g
+    val pr = ::println
+    val pr2 = super::println
 }

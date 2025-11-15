@@ -6,6 +6,7 @@ import free.core.lexer.FreeTokenType.DOUBLE_PLUS
 import free.core.parser.FreeParserContext
 import free.core.parser.expression.Expression
 import free.core.parser.expression.SuffixUnaryExpression
+import free.core.parser.expression.parser.SuffixUnaryExpressionParser
 
 object SuffixUnaryExpressionMatcher : ExpressionMatcher<SuffixUnaryExpression> {
 	

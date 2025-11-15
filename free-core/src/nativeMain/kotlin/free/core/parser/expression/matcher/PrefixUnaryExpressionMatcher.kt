@@ -9,7 +9,7 @@ import free.core.parser.expression.parser.PrefixUnaryExpressionParser
 
 object PrefixUnaryExpressionMatcher : ExpressionMatcher<PrefixUnaryExpression> {
 	
-	private val tokenTypes = listOf(PLUS, MINUS, NOT, BIT_NOT, DOUBLE_PLUS, DOUBLE_MINUS)
+	private val tokenTypes = listOf(PLUS, MINUS, BANG, BIT_NOT, DOUBLE_PLUS, DOUBLE_MINUS)
 	
 	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
 		tokenTypes.forEach {

@@ -36,8 +36,6 @@ data object SymbolRecognizer : TokenRecognizer {
 			".." to FreeTokenType.DOUBLE_DOT,
 			"?=" to FreeTokenType.QUESTION_ASSIGN,
 			"?." to FreeTokenType.QUESTION_DOT,
-			"!." to FreeTokenType.NOT_NULL_ACCESS,
-			"!!" to FreeTokenType.NOT_NULL_ASSERT,
 			"::" to FreeTokenType.DOUBLE_COLON
 		),
 		1 to mapOf(
@@ -49,7 +47,7 @@ data object SymbolRecognizer : TokenRecognizer {
 			"=" to FreeTokenType.ASSIGN,
 			">" to FreeTokenType.GT,
 			"<" to FreeTokenType.LT,
-			"!" to FreeTokenType.NOT,
+			"!" to FreeTokenType.BANG,
 			"&" to FreeTokenType.BIT_AND,
 			"|" to FreeTokenType.BIT_OR,
 			"^" to FreeTokenType.BIT_XOR,

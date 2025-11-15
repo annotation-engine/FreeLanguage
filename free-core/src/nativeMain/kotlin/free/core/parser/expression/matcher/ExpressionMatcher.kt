@@ -19,7 +19,7 @@ private val matchers = listOf(
 	SuffixUnaryExpressionMatcher,
 	BinaryExpressionMatcher,
 	TernaryExpressionMatcher,
-	PrimaryExpressionMatcher,
+	PostfixExpressionMatcher,
 )
 
 context(_: FreeContext)

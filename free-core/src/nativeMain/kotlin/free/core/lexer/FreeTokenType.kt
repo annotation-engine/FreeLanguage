@@ -65,7 +65,7 @@ enum class FreeTokenType {
 	// ==============================
 	PLUS,               // +
 	MINUS,              // -
-	NOT,                // !
+	BANG,               // !
 	BIT_NOT,            // ~
 	DOUBLE_PLUS,        // ++
 	DOUBLE_MINUS,       // --
@@ -123,8 +123,6 @@ enum class FreeTokenType {
 	// ==============================
 	DOT,                // .
 	QUESTION_DOT,       // ?.
-	NOT_NULL_ASSERT,    // !!
-	NOT_NULL_ACCESS,    // !.
 	DOUBLE_COLON,       // ::
 	LPAREN,             // (
 	RPAREN,             // )

@@ -3,4 +3,6 @@ package free.core.parser.expression
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface Expression
+data class NonNullAssertionExpression(
+	val receiver: Expression
+) : Expression

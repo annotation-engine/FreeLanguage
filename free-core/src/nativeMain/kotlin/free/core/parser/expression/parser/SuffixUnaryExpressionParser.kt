@@ -1,4 +1,4 @@
-package free.core.parser.expression.matcher
+package free.core.parser.expression.parser
 
 import free.core.FreeContext
 import free.core.lexer.FreeTokenType

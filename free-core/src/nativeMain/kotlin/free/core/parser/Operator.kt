@@ -187,7 +187,7 @@ enum class Associativity {
 fun FreeTokenType.toOperator(): Operator = when (this) {
 	FreeTokenType.DOUBLE_PLUS -> Operator.DOUBLE_PLUS
 	FreeTokenType.DOUBLE_MINUS -> Operator.DOUBLE_MINUS
-	FreeTokenType.NOT -> Operator.NOT
+	FreeTokenType.BANG -> Operator.NOT
 	FreeTokenType.BIT_NOT -> Operator.BIT_NOT
 	FreeTokenType.DOUBLE_STAR -> Operator.DOUBLE_STAR
 	FreeTokenType.STAR -> Operator.STAR

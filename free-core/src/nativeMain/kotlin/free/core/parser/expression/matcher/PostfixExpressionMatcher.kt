@@ -4,11 +4,15 @@ import free.core.FreeContext
 import free.core.lexer.FreeTokenType.*
 import free.core.parser.FreeParserContext
 import free.core.parser.expression.Expression
-import free.core.parser.expression.parser.PrimaryExpressionParser
+import free.core.parser.expression.parser.PostfixExpressionParser
 
-object PrimaryExpressionMatcher : ExpressionMatcher<Expression> {
+object PostfixExpressionMatcher : ExpressionMatcher<Expression> {
 	
-	private val tokenTypes = listOf(NUMBER, STRING, CHAR, TRUE, FALSE, IDENTIFIER)
+	private val tokenTypes = listOf(
+		NUMBER, STRING, CHAR, TRUE, FALSE, IDENTIFIER,
+		THIS, SUPER, NULL,
+		DOUBLE_COLON
+	)
 	
 	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
 		tokenTypes.forEach {
@@ -19,6 +23,6 @@ object PrimaryExpressionMatcher : ExpressionMatcher<Expression> {
 	
 	context(_: FreeContext)
 	override fun parse(ctx: FreeParserContext, left: Expression?): Expression {
-		return PrimaryExpressionParser(ctx).parse()
+		return PostfixExpressionParser(ctx).parse()
 	}
 }
