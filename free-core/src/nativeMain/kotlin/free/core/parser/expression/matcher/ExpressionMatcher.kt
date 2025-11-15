@@ -17,9 +17,9 @@ private val matchers = listOf(
 	GroupingExpressionMatcher,
 	PrefixUnaryExpressionMatcher,
 	SuffixUnaryExpressionMatcher,
-	BinaryExpressionMatcher,
-	TernaryExpressionMatcher,
 	PostfixExpressionMatcher,
+	BinaryExpressionMatcher,
+	TernaryExpressionMatcher
 )
 
 context(_: FreeContext)

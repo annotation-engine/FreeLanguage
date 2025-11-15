@@ -11,7 +11,7 @@ object PostfixExpressionMatcher : ExpressionMatcher<Expression> {
 	private val tokenTypes = listOf(
 		NUMBER, STRING, CHAR, TRUE, FALSE, IDENTIFIER,
 		THIS, SUPER, NULL,
-		DOUBLE_COLON
+		DOT, QUESTION_DOT, DOUBLE_COLON
 	)
 	
 	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
@@ -23,6 +23,6 @@ object PostfixExpressionMatcher : ExpressionMatcher<Expression> {
 	
 	context(_: FreeContext)
 	override fun parse(ctx: FreeParserContext, left: Expression?): Expression {
-		return PostfixExpressionParser(ctx).parse()
+		return PostfixExpressionParser(ctx).parse(left)
 	}
 }

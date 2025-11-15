@@ -23,4 +23,5 @@ fun main() {
     val value1 = a.b + c.d?.e! - f!.g
     val pr = ::println
     val pr2 = super::println
+    val a = (1 + 2) + (a.b.c).d
 }

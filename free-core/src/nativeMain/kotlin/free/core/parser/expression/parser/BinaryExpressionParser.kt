@@ -33,19 +33,11 @@ class BinaryExpressionParser(
 		}
 	}
 	
-	private fun exchange(
-		left: BinaryExpression,
-		operator: Operator,
-		right: Expression
-	): BinaryExpression {
+	private fun exchange(left: BinaryExpression, operator: Operator, right: Expression): BinaryExpression {
 		return BinaryExpression(
-			left = left.left,
+			left = left,
 			operator = left.operator,
-			right = BinaryExpression(
-				left = left.right,
-				operator = operator,
-				right = right
-			)
+			right = BinaryExpression(left.right, operator, right)
 		)
 	}
 }

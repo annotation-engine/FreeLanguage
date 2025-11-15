@@ -3,8 +3,7 @@ package free.core.parser.expression.parser
 import free.core.FreeContext
 import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
-import free.core.parser.expression.Expression
-import free.core.parser.expression.GroupingExpression
+import free.core.parser.expression.*
 import free.core.parser.expression.matcher.parseExpression
 
 class GroupingExpressionParser(
@@ -12,11 +11,21 @@ class GroupingExpressionParser(
 ) {
 	
 	context(_: FreeContext)
-	fun parse(): GroupingExpression {
+	fun parse(): Expression {
 		var expression: Expression? = null
 		do {
 			expression = parseExpression(ctx, expression)
 		} while (!ctx.match(FreeTokenType.RPAREN))
-		return GroupingExpression(expression)
+		expression = if (isOmissible(expression)) expression else GroupingExpression(expression)
+		return if (isAccessOperator(ctx)) {
+			PostfixExpressionParser(ctx).parse(expression)
+		} else expression
+	}
+	
+	private fun isOmissible(expression: Expression): Boolean {
+		return expression !is BinaryExpression
+				&& expression !is PrefixUnaryExpression
+				&& expression !is SuffixUnaryExpression
+				&& expression !is TernaryExpression
 	}
 }
