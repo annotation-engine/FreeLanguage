@@ -21,19 +21,19 @@ context(context: FreeContext)
 fun List<FreeToken>.formatToString(): String {
 	val lineColumns = this.map { "${context.sourcePath}:${it.line}:${it.column}" }
 	val max = lineColumns.maxOf { it.length }
-	return buildString {
-		this@formatToString.forEachIndexed { index, token ->
-			val lineColumn = lineColumns[index]
-			append(lineColumn)
-			append(" ".repeat(max - lineColumn.length + 2))
-			if (token.type == FreeTokenType.STRING || token.value.isNotEmpty()) {
-				append("${token.type}(\"${token.value}\")")
-			} else {
-				append(token.type)
-			}
-			append("\n")
+	val sb = StringBuilder()
+	this.forEachIndexed { index, token ->
+		val lineColumn = lineColumns[index]
+		sb.append(lineColumn)
+		sb.append(" ".repeat(max - lineColumn.length + 2))
+		if (token.type == FreeTokenType.STRING || token.value.isNotEmpty()) {
+			sb.append("${token.type}(\"${token.value}\")")
+		} else {
+			sb.append(token.type)
 		}
+		sb.append("\n")
 	}
+	return sb.toString()
 }
 
 fun List<FreeToken>.removeComments(): List<FreeToken> {

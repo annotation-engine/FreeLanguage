@@ -16,10 +16,8 @@ private val accessModifiers = setOf(PRIVATE, FILE, INTERNAL, MODULE, PUBLIC)
 
 val Set<Modifier>.access: Modifier
 	get() {
-		accessModifiers.forEach {
-			if (it in this) return it
-		}
-		error("未知的修饰符")
+		return accessModifiers.find { it in this }
+			?: error("未知的修饰符")
 	}
 
 val Set<Modifier>.isOpen: Boolean

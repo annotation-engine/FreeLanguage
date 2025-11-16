@@ -26,12 +26,9 @@ private val matchers = listOf(
 
 context(_: FreeContext)
 fun parseExpression(ctx: FreeParserContext, left: Expression? = null): Expression {
-	matchers.forEach {
-		if (it.match(ctx, left)) {
-			return it.parse(ctx, left)
-		}
-	}
-	syntaxError("不支持的表达式", ctx.current)
+	val matcher = matchers.find { it.match(ctx, left) }
+		?: syntaxError("不支持的表达式", ctx.current)
+	return matcher.parse(ctx, left)
 }
 
 context(_: FreeContext)
@@ -48,16 +45,9 @@ private val endTokenTypes = setOf(SEMICOLON)
 private val nonConsumerEndTokenTypes = setOf(RPAREN, RBRACKET, COLON, COMMA)
 
 private fun isAtExpressionEnd(ctx: FreeParserContext): Boolean {
-	endTokenTypes.forEach {
-		if (ctx.match(it)) {
-			return true
-		}
-	}
-	nonConsumerEndTokenTypes.forEach {
-		if (ctx.check(it)) {
-			return true
-		}
-	}
+	val exists = endTokenTypes.any { ctx.match(it) } ||
+			nonConsumerEndTokenTypes.any { ctx.check(it) }
+	if (exists) return true
 	val previous = ctx.previous
 	val current = ctx.current
 	if (previous.line == current.line) return false

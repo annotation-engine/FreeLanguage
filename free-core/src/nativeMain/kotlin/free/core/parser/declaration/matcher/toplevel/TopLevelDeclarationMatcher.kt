@@ -29,11 +29,8 @@ private val matchers = listOf(
 
 context(_: FreeContext)
 fun parseTopLevelDeclaration(ctx: FreeParserContext, modifiers: Set<Modifier>): Declaration {
-	matchers.forEach { matcher ->
-		if (matcher.match(ctx)) {
-			matcher.check(ctx, modifiers)
-			return matcher.parse(ctx, modifiers)
-		}
-	}
-	syntaxError("未知的顶层声明", ctx.current)
+	val matcher = matchers.find { it.match(ctx) }
+		?: syntaxError("未知的顶层声明", ctx.current)
+	matcher.check(ctx, modifiers)
+	return matcher.parse(ctx, modifiers)
 }

@@ -19,10 +19,7 @@ private val matchers = listOf(
 
 context(_: FreeContext)
 fun parseStatement(ctx: FreeParserContext): Statement {
-	matchers.forEach { matcher ->
-		if (matcher.match(ctx)) {
-			return matcher.parse(ctx)
-		}
-	}
-	syntaxError("不支持的语句", ctx.current)
+	val matcher = matchers.find { it.match(ctx) }
+		?: syntaxError("不支持的语句", ctx.current)
+	return matcher.parse(ctx)
 }

@@ -44,11 +44,8 @@ fun parseMemberDeclaration(
 	parentModifiers: Set<Modifier>,
 	modifiers: Set<Modifier>
 ): Declaration {
-	matchers.forEach { matcher ->
-		if (matcher.match(ctx)) {
-			matcher.check(ctx, parentTypeKind, parentModifiers, modifiers)
-			return matcher.parse(ctx, parentTypeKind, modifiers)
-		}
-	}
-	syntaxError("未知的成员声明", ctx.current)
+	val matcher = matchers.find { it.match(ctx) }
+		?: syntaxError("未知的成员声明", ctx.current)
+	matcher.check(ctx, parentTypeKind, parentModifiers, modifiers)
+	return matcher.parse(ctx, parentTypeKind, modifiers)
 }

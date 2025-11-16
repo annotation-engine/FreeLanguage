@@ -12,15 +12,12 @@ object PrefixUnaryExpressionMatcher : ExpressionMatcher<PrefixUnaryExpression> {
 	private val tokenTypes = listOf(PLUS, MINUS, BANG, BIT_NOT, DOUBLE_PLUS, DOUBLE_MINUS)
 	
 	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
-		tokenTypes.forEach {
-			if (ctx.current.type == it) {
-				return if (left == null || (it != PLUS && it != MINUS)) {
-					ctx.advance()
-					true
-				} else false
-			}
-		}
-		return false
+		val type = ctx.current.type
+		if (type !in tokenTypes) return false
+		return if (left == null || type != PLUS && type != MINUS) {
+			ctx.advance()
+			true
+		} else false
 	}
 	
 	context(_: FreeContext)

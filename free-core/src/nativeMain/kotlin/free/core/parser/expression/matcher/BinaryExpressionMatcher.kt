@@ -19,10 +19,7 @@ object BinaryExpressionMatcher : ExpressionMatcher<BinaryExpression> {
 	)
 	
 	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
-		tokenTypes.forEach {
-			if (ctx.match(it)) return true
-		}
-		return false
+		return tokenTypes.any { ctx.match(it) }
 	}
 	
 	context(_: FreeContext)

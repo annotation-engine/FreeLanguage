@@ -13,11 +13,7 @@ object SuffixUnaryExpressionMatcher : ExpressionMatcher<SuffixUnaryExpression> {
 	private val tokenTypes = listOf(DOUBLE_PLUS, DOUBLE_MINUS)
 	
 	override fun match(ctx: FreeParserContext, left: Expression?): Boolean {
-		val type = ctx.next.type
-		tokenTypes.forEach {
-			if (type == it) return true
-		}
-		return false
+		return ctx.next.type in tokenTypes
 	}
 	
 	context(_: FreeContext)

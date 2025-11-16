@@ -111,8 +111,5 @@ private val accessTokenTypes = listOf(
 )
 
 fun isAccessOperator(ctx: FreeParserContext): Boolean {
-	accessTokenTypes.forEach {
-		if (ctx.match(it)) return true
-	}
-	return false
+	return accessTokenTypes.any { ctx.match(it) }
 }
