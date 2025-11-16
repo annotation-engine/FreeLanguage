@@ -25,9 +25,8 @@ class GroupingExpressionParser(
 	}
 	
 	private fun isOmissible(expression: Expression): Boolean {
-		return expression !is BinaryExpression
-				&& expression !is PrefixUnaryExpression
-				&& expression !is SuffixUnaryExpression
-				&& expression !is TernaryExpression
+		return expression !is BinaryExpression &&
+				expression !is PrefixUnaryExpression &&
+				expression !is TernaryExpression
 	}
 }

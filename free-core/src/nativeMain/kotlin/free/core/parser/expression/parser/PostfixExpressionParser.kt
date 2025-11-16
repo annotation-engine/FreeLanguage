@@ -69,7 +69,12 @@ class PostfixExpressionParser(
 			in accessTokenTypes -> {
 				ctx.retreat()
 				when {
-					receiver != null -> receiver
+					receiver != null -> {
+						if (receiver is PrefixUnaryExpression) {
+							syntaxError("访问操作符前不可以使用前缀一元运算符", ctx.peek(offset = -2)!!)
+						} else receiver
+					}
+					
 					token.type == DOUBLE_COLON -> ThisLiteral
 					else -> syntaxError("'.' 和 '?.' 访问操作符前缺少接收者", ctx.previous)
 				}

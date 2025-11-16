@@ -20,6 +20,7 @@ private val matchers = listOf(
 	SuffixUnaryExpressionMatcher,
 	PostfixExpressionMatcher,
 	BinaryExpressionMatcher,
+	ElvisExpressionMatcher,
 	TernaryExpressionMatcher
 )
 
