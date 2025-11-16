@@ -18,8 +18,6 @@ class FreeParser(
 	
 	context(context: FreeContext)
 	fun parse(): SourceFileNode {
-		val a = 1
-		(a).toString()
 		val packageDeclaration = PackageDeclarationParser(ctx).parse()
 		val importDeclarations = mutableListOf<ImportDeclaration>()
 		while (ctx.match(FreeTokenType.IMPORT)) {

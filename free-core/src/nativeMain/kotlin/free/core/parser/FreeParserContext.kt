@@ -34,6 +34,13 @@ class FreeParserContext(
 		return current
 	}
 	
+	fun retreat(): FreeToken {
+		if (position > 0) {
+			position--
+		}
+		return current
+	}
+	
 	fun match(type: FreeTokenType, vararg types: FreeTokenType): Boolean {
 		if (!check(type)) {
 			return false

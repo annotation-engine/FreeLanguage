@@ -17,7 +17,7 @@ fun parseFunParameters(ctx: FreeParserContext): List<Parameter> {
 	while (!ctx.match(FreeTokenType.RPAREN)) {
 		parameters += FunParameterParser(ctx).parse()
 		if (!ctx.check(FreeTokenType.RPAREN)) {
-			ctx.match(FreeTokenType.COMMA)
+			ctx.expect(FreeTokenType.COMMA, "参数缺少 ','")
 		}
 	}
 	return parameters

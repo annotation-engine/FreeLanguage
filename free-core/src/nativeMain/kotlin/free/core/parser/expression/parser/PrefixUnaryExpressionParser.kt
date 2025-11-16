@@ -14,7 +14,6 @@ class PrefixUnaryExpressionParser(
 	context(_: FreeContext)
 	fun parse(): PrefixUnaryExpression {
 		val operator = ctx.previous.type.toOperator()
-		println(operator)
 		ctx.expect(FreeTokenType.IDENTIFIER, "一元运算符后只允许跟标识符")
 		val expression = IdentifierExpression(ctx.previous.value)
 		return PrefixUnaryExpression(operator, expression)

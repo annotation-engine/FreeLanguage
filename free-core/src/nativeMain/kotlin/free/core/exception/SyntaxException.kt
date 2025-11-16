@@ -10,7 +10,7 @@ private class SyntaxException(
 	line: Int,
 	column: Int,
 	type: FreeTokenType?
-) : Exception("错误位置:$sourcePath:$line:$column ${if (type != null) "$type " else ""}$message.")
+) : Exception("错误位置: $sourcePath:$line:$column ${if (type != null) "$type " else ""}$message.")
 
 context(context: FreeContext)
 fun syntaxError(message: String, line: Int, column: Int, type: FreeTokenType? = null): Nothing {

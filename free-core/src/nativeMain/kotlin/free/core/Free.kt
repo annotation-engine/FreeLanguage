@@ -55,7 +55,7 @@ class FreeContext(
 	val sourcePath: String
 )
 
-private val json = Json {
+val json = Json {
 	prettyPrint = true
 	encodeDefaults = true
 	classDiscriminator = "class"

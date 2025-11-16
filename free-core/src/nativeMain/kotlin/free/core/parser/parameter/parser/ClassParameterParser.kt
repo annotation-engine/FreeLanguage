@@ -22,7 +22,7 @@ fun parseClassParameters(
 	while (!ctx.match(FreeTokenType.RPAREN)) {
 		parameters += ClassParameterParser(ctx).parse(classAccess)
 		if (!ctx.check(FreeTokenType.RPAREN)) {
-			ctx.match(FreeTokenType.COMMA)
+			ctx.expect(FreeTokenType.COMMA, "参数缺少 ','")
 		}
 	}
 	return parameters

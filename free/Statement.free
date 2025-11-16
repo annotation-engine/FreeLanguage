@@ -17,11 +17,13 @@ fun main() {
         false
     val bool3 = true
         || false
-    val third1 = true ? 1 : 0
-    val third2 = true ? true ? 1 : 0 : true ? 1 : 0
-
+    val third1 = a ? (a ? b : c) : d
+    val third2 = true ? true ? 1 : 0 : true ? 1 : 1 + 2
     val value1 = a.b + c.d?.e! - f!.g
-    val pr = ::println
+    val pr1 = ::println
     val pr2 = super::println
-    val a = (1 + 2) + (a.b.c).d
+    val a = (1 + 2) + (a.b.c).d.f
+    val c = (d).e
+    val b = (((((a)))))                                 # 语法分析阶段去除无效 '(' 和 ')'
+    val name = getInfos(age: 18, param: "Hello").first()["name"]
 }

@@ -11,37 +11,50 @@ class PostfixExpressionParser(
 ) {
 	context(_: FreeContext)
 	fun parse(left: Expression?): Expression {
-		var receiver = if (ctx.previous.type in accessTokenTypes) {
-			val operator = ctx.previous.type.toAccessOperator()
-			if (left == null && operator != AccessOperator.DOUBLE_COLON) {
-				syntaxError("'.' 和 '?.' 访问操作符前必须跟标识符或字面量", ctx.previous)
-			}
-			val receiver = left ?: ThisLiteral
-			ctx.expect(IDENTIFIER, "访问操作符后必须跟标识符")
-			val name = ctx.previous.value
-			PropertyAccessExpression(
-				receiver = receiver,
-				operator = operator,
-				expression = IdentifierExpression(name)
-			)
-		} else getPrimaryExpression()
-		if (ctx.match(BANG)) {
-			receiver = NonNullAssertionExpression(receiver)
-		}
+		var receiver = parseInitialExpression(left)
+		receiver = parseExpression(receiver)
 		while (isAccessOperator(ctx)) {
 			val operator = ctx.previous.type.toAccessOperator()
-			ctx.expect(IDENTIFIER, "访问操作符后必须跟标识符")
-			var expression: Expression = IdentifierExpression(ctx.previous.value)
-			if (ctx.match(BANG)) {
-				expression = NonNullAssertionExpression(expression)
-			}
-			receiver = PropertyAccessExpression(receiver, operator, expression)
+			var expression = parseIdentifierExpression()
+			expression = parseExpression(expression)
+			receiver = PropertyAccessExpression(
+				receiver = receiver,
+				operator = operator,
+				expression = expression
+			)
 		}
 		return receiver
 	}
 	
+	private fun isInvoke(): Boolean {
+		return ctx.match(LPAREN) || ctx.match(LBRACKET)
+	}
+	
 	context(_: FreeContext)
-	private fun getPrimaryExpression(): Expression {
+	private fun parseInvokeExpression(callee: Expression): InvokeExpression {
+		return when (ctx.previous.type) {
+			InvokeType.CALL.startTokenType -> {
+				val arguments = parseArguments(ctx, InvokeType.CALL)
+				CallExpression(callee, arguments)
+			}
+			
+			InvokeType.INDEX_ACCESS.startTokenType -> {
+				val arguments = parseArguments(ctx, InvokeType.INDEX_ACCESS)
+				IndexAccessExpression(callee, arguments)
+			}
+			
+			else -> error("不支持的调用符号")
+		}
+	}
+	
+	context(_: FreeContext)
+	private fun parseIdentifierExpression(): Expression {
+		ctx.expect(IDENTIFIER, "访问操作符后必须跟标识符")
+		return IdentifierExpression(ctx.previous.value)
+	}
+	
+	context(_: FreeContext)
+	private fun parseInitialExpression(receiver: Expression?): Expression {
 		val token = ctx.previous
 		return when (token.type) {
 			NUMBER -> NumberLiteral(token.value)
@@ -53,8 +66,36 @@ class PostfixExpressionParser(
 			SUPER -> SuperLiteral
 			NULL -> NullLiteral
 			IDENTIFIER -> IdentifierExpression(token.value)
+			in accessTokenTypes -> {
+				ctx.retreat()
+				when {
+					receiver != null -> receiver
+					token.type == DOUBLE_COLON -> ThisLiteral
+					else -> syntaxError("'.' 和 '?.' 访问操作符前缺少接收者", ctx.previous)
+				}
+			}
+			
 			else -> syntaxError("不支持的基础表达式", token)
 		}
+	}
+	
+	context(_: FreeContext)
+	private fun parseExpression(receiver: Expression): Expression {
+		var receiver = receiver
+		while (ctx.match(BANG)) {
+			if (receiver !is NonNullAssertionExpression) {
+				receiver = NonNullAssertionExpression(receiver)
+			}
+		}
+		while (isInvoke()) {
+			receiver = parseInvokeExpression(receiver)
+		}
+		while (ctx.match(BANG)) {
+			if (receiver !is NonNullAssertionExpression) {
+				receiver = NonNullAssertionExpression(receiver)
+			}
+		}
+		return receiver
 	}
 }
 

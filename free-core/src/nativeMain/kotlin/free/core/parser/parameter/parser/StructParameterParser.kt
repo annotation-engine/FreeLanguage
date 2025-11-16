@@ -16,7 +16,7 @@ fun parseStructParameters(ctx: FreeParserContext, structAccess: Modifier): List<
 	while (!ctx.match(FreeTokenType.RPAREN)) {
 		parameters += StructParameterParser(ctx).parse(structAccess)
 		if (!ctx.check(FreeTokenType.RPAREN)) {
-			ctx.match(FreeTokenType.COMMA)
+			ctx.expect(FreeTokenType.COMMA, "参数缺少 ','")
 		}
 	}
 	return parameters

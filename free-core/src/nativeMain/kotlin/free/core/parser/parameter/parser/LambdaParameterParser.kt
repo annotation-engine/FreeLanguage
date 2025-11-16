@@ -12,7 +12,7 @@ fun parseLambdaParameters(ctx: FreeParserContext): List<Parameter> {
 	while (!ctx.match(FreeTokenType.RPAREN)) {
 		parameters += LambdaParameterParser(ctx).parse()
 		if (!ctx.check(FreeTokenType.RPAREN)) {
-			ctx.expect(FreeTokenType.COMMA, "函数参数缺少 ','")
+			ctx.expect(FreeTokenType.COMMA, "参数缺少 ','")
 		}
 	}
 	return parameters
