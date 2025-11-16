@@ -34,9 +34,9 @@ class TypeReferenceParser(
 ) {
 	
 	context(_: FreeContext)
-	fun parse(isSupportedLambda: Boolean = true): TypeReference {
+	fun parse(isSupportedLambdaType: Boolean = true): TypeReference {
 		return if (ctx.match(FreeTokenType.LPAREN)) {
-			parseLambdaType(isSupportedLambda)
+			parseLambdaType(isSupportedLambdaType)
 		} else {
 			parseNamedType()
 		}
@@ -44,11 +44,11 @@ class TypeReferenceParser(
 	
 	context(_: FreeContext)
 	private fun parseLambdaType(
-		isSupportedLambda: Boolean
+		isSupportedLambdaType: Boolean
 	): TypeReference {
 		val parameters = parseLambdaParameters(ctx)
 		if (ctx.match(FreeTokenType.ARROW)) {
-			if (!isSupportedLambda) {
+			if (!isSupportedLambdaType) {
 				syntaxError("不支持 Lambda 类型", ctx.previous)
 			}
 			val returnTypes = mutableListOf<TypeReference>()
@@ -100,7 +100,7 @@ class TypeReferenceParser(
 				syntaxError("Lambda 缺少 '->'", ctx.current)
 			}
 			val parameter = parameters.single()
-			if (parameter.name != "") {
+			if (parameter.name != null) {
 				syntaxError("语法错误", ctx.peek(offset = -4)!!)
 			}
 			val isArray = ctx.match(FreeTokenType.LBRACKET)

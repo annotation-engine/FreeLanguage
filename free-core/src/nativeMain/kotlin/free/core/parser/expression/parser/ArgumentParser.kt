@@ -28,10 +28,10 @@ private class CallArgumentParser(
 ) {
 	context(_: FreeContext)
 	fun parse(type: InvokeType): Argument {
-		val name = if (ctx.peek(offset = 1)?.type == FreeTokenType.COLON) {
+		val name = if (ctx.peek(offset = 1)?.type == FreeTokenType.ASSIGN) {
 			ctx.expect(FreeTokenType.IDENTIFIER, "型参名称必须为标识符")
 			val name = ctx.previous.value
-			ctx.expect(FreeTokenType.COLON, "型参名称后必须为 ':'")
+			ctx.expect(FreeTokenType.ASSIGN, "型参名称后必须为 '='")
 			name
 		} else null
 		val expression = parseCompleteExpression(ctx)

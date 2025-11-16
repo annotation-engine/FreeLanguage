@@ -6,9 +6,9 @@ fun main() {
     val n2 = n++ + 10
     val n3 = n1 + n2 * 5 + 6**10
     val n4 = 1 + (2 + 3) * 10
-    val result = (++a * b-- / c % d ** e - f)
-                 + (g << h >> i >>> j)
-                 + (x + y - z)
+    val result = (++a * b-- / c % d ** e - f) +
+                 (g << h >> i >>> j) +
+                 (x + y - z)
 }
 
 private const fun add(num1: Int, num2: Int?): Int {
@@ -27,7 +27,7 @@ private fun returns1(): ((fun1: () -> String[]) -> Unit)? {
 
 }
 
-private fun returns2(): (String, age: Int, _: String) -> [Int?, String[]?], String {
+private fun returns2(): (String = "", age: Int = 10, _: String) -> [Int?, String[]?], String {
 
 }
 
@@ -101,6 +101,10 @@ abstract class AbstractClass {
 enum UserType {
     ADMIN,
     USER
+}
+
+fun defaultValue(value: Int = 10) {
+
 }
 
 enum Status(

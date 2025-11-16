@@ -6,8 +6,8 @@ import free.core.lexer.FreeTokenType
 import free.core.parser.FreeParserContext
 import free.core.parser.Modifier
 import free.core.parser.getDefaultMemberAccessModifier
-import free.core.parser.node.TypeReferenceParser
 import free.core.parser.parameter.Parameter
+import free.core.parser.parameter.parseParameter
 
 context(_: FreeContext)
 fun parseAnnotationParameters(
@@ -40,14 +40,6 @@ class AnnotationParameterParser(
 			ctx.match(FreeTokenType.VAL) -> Modifier.VAL
 			else -> syntaxError("注解参数必须添加 'val' 修饰符", ctx.current)
 		}
-		ctx.expect(FreeTokenType.IDENTIFIER, "注解参数缺少名称")
-		val name = ctx.previous.value
-		ctx.expect(FreeTokenType.COLON, "结构体参数缺少 ':'")
-		val typeReference = TypeReferenceParser(ctx).parse(isSupportedLambda = false)
-		return Parameter(
-			name = name,
-			modifiers = modifiers,
-			typeReference = typeReference,
-		)
+		return parseParameter(ctx, modifiers, isSupportedLambdaType = false)
 	}
 }

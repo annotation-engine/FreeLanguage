@@ -7,8 +7,8 @@ import free.core.parser.FreeParserContext
 import free.core.parser.Modifier
 import free.core.parser.getClassParameterAccessModifier
 import free.core.parser.getDefaultMemberAccessModifier
-import free.core.parser.node.TypeReferenceParser
 import free.core.parser.parameter.Parameter
+import free.core.parser.parameter.parseParameter
 
 context(_: FreeContext)
 fun parseClassParameters(
@@ -54,14 +54,6 @@ private class ClassParameterParser(
 		if (visibleModifier != null) {
 			modifiers += visibleModifier
 		}
-		ctx.expect(FreeTokenType.IDENTIFIER, "主构造参数缺少名称")
-		val name = ctx.previous.value
-		ctx.expect(FreeTokenType.COLON, "主构造参数缺少 ':'")
-		val typeReference = TypeReferenceParser(ctx).parse()
-		return Parameter(
-			name = name,
-			modifiers = modifiers,
-			typeReference = typeReference
-		)
+		return parseParameter(ctx, modifiers)
 	}
 }

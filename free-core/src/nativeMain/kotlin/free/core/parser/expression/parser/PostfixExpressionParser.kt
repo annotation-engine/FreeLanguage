@@ -40,6 +40,9 @@ class PostfixExpressionParser(
 			
 			InvokeType.INDEX_ACCESS.startTokenType -> {
 				val arguments = parseArguments(ctx, InvokeType.INDEX_ACCESS)
+				if (arguments.isEmpty()) {
+					syntaxError("索引访问不允许空参数", ctx.previous)
+				}
 				IndexAccessExpression(callee, arguments)
 			}
 			
